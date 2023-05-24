@@ -16,7 +16,6 @@ BEGIN
 				SCHEMA_NAME(schema_id) AS [schema],
 				name AS [table]
 			FROM sys.tables
-			WHERE OBJECT_ID NOT IN ('1726629194')
 			ORDER BY [schema], [table] ASC
 
 			DECLARE @Pointer INT = (SELECT count(*) FROM @ListTable);
