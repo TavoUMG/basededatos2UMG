@@ -5,6 +5,8 @@ BEGIN
 		[FacturaId] [decimal](18, 0) NOT NULL,
 		[ProductoId] [decimal](18, 0) NOT NULL,		
 		[Cantidad] [int] NULL,		
+		[Precio] [decimal](20, 2) NOT NULL,	
+		[SubTotal] [decimal](20, 2) NOT NULL,	
 	 CONSTRAINT [PK_DETALLE] PRIMARY KEY CLUSTERED	
 	(
 		[Id] DESC

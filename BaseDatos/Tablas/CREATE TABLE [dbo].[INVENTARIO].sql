@@ -2,9 +2,9 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[IN
 BEGIN
 	CREATE TABLE [dbo].[INVENTARIO](
 		[Id] [decimal](18, 0) IDENTITY(1,1) NOT NULL,	
-		[ProductoId] [decimal](18, 0) NOT NULL,		
-		[Unidades] [int] NULL,	
-		[Validacion] [nvarchar](20) NULL,		
+		[ProductoId] [decimal](18, 0) NOT NULL,	
+		[PrecioVenta] [decimal](20, 2) NOT NULL,			
+		[Stock] [int] NOT NULL,			
 	 CONSTRAINT [PK_INVENTARIO] PRIMARY KEY CLUSTERED	
 	(
 		[Id] DESC

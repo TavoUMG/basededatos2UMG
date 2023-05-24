@@ -2,8 +2,11 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[FA
 BEGIN
 	CREATE TABLE [dbo].[FACTURA](
 		[Id] [decimal](18, 0) IDENTITY(1,1) NOT NULL,	
-		[ClienteId] [decimal](18, 0) NOT NULL,	
-		[Fecha] [datetime] NOT NULL,						
+		[ClienteId] [decimal](18, 0) NOT NULL,		
+		[CUI_NIT] [nvarchar](15) NULL,		
+		[Direccion] [nvarchar](250) NULL,	
+		[Fecha] [datetime] NOT NULL,
+		[Total] [decimal](20, 2) NOT NULL,						
 	 CONSTRAINT [PK_FACTURA] PRIMARY KEY CLUSTERED	
 	(
 		[Id] DESC

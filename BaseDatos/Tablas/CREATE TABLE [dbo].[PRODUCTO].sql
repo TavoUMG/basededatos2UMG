@@ -3,9 +3,7 @@ BEGIN
 	CREATE TABLE [dbo].[PRODUCTO](
 		[Id] [decimal](18, 0) IDENTITY(1,1) NOT NULL,	
 		[CategoriaId] [decimal](18, 0) NOT NULL,
-		[ProveedorId] [decimal](18,0) NOT NULL,
 		[Nombre] [nvarchar](75) NOT NULL,	
-		[PrecioCosto] [decimal](20,2) NOT NULL,	
 		[Vencimiento] [datetime] NULL,			
 	 CONSTRAINT [PK_PRODUCTO] PRIMARY KEY CLUSTERED	
 	(
@@ -15,8 +13,6 @@ BEGIN
 	
 	ALTER TABLE [dbo].[PRODUCTO]  WITH CHECK ADD  CONSTRAINT [FK_PRODUCTO_CategoriaId] FOREIGN KEY([CategoriaId])
 	REFERENCES [dbo].[CATEGORIA] ([Id])
-	ALTER TABLE [dbo].[PRODUCTO]  WITH CHECK ADD  CONSTRAINT [FK_PRODUCTO_ProveedorId] FOREIGN KEY([ProveedorId])
-	REFERENCES [dbo].[PROVEEDOR] ([Id])
 
 	PRINT N'CREATE TABLE [dbo].[PRODUCTO]'
 END
