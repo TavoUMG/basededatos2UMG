@@ -3,9 +3,7 @@ BEGIN
 	CREATE TABLE [dbo].[CAJA](
 		[Id] [decimal](18, 0) IDENTITY(1,1) NOT NULL,				
 		[efectivoApertura] [decimal](20,2) NOT NULL,
-		[efectivoCierre] [decimal](20,2) NOT NULL,			
-		[fechaApertura] [datetime] NOT NULL,
-		[fechaCierre] [datetime] NOT NULL,
+		[efectivoCierre] [decimal](20,2) NOT NULL,	
 	 CONSTRAINT [PK_CAJA] PRIMARY KEY CLUSTERED	
 	(
 		[Id] DESC
