@@ -1,6 +1,7 @@
 ﻿using Sistema.Class;
 using Sistema.Connections.SQLServer;
 using Sistema.Models.Sistema;
+using Sistema.Util;
 using System.Data;
 
 namespace Sistema.Services
@@ -22,7 +23,6 @@ namespace Sistema.Services
         {
             (bool respuesta, string mensaje, List<UsuarioModel> modelo) = (false, "", new List<UsuarioModel>());
             _baseDatos = new BaseDatos(_conexion);
-
 
             try
             {
@@ -46,26 +46,13 @@ namespace Sistema.Services
                     case OptionUsuario.TODOS:
                     case OptionUsuario.SELECCIONAR:
                     case OptionUsuario.INICIO_SESION:
+                    case OptionUsuario.SELECCIONAR_ID:
                         if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
                         foreach (DataRow dr in dt.Rows)
                         {
-                            modelo.Add(new UsuarioModel
-                            {
-                                Id = ClassUtilidad.parseMultiple(dr.ItemArray[0].ToString(), ClassUtilidad.TipoDato.Integer).numero,
-                                CUI = dr.ItemArray[1].ToString(),
-                                Nombre = dr.ItemArray[2].ToString(),
-                                Apellido = dr.ItemArray[3].ToString(),
-                                Password = dr.ItemArray[4].ToString(),
-                                Auditoria = new AuditoriaModel
-                                {
-                                    AuditFechaCreacion = String.IsNullOrEmpty(dr.ItemArray[5].ToString()) ? null : ClassUtilidad.parseMultiple(dr.ItemArray[5].ToString(), ClassUtilidad.TipoDato.DateTime).fechahora.ToString("dd/MM/yyyy HH:mm:ss"),
-                                    AuditUsuarioCreacion = dr.ItemArray[6].ToString(),
-                                    AuditFechaModificacion = String.IsNullOrEmpty(dr.ItemArray[7].ToString()) ? null : ClassUtilidad.parseMultiple(dr.ItemArray[7].ToString(), ClassUtilidad.TipoDato.DateTime).fechahora.ToString("dd/MM/yyyy HH:mm:ss"),
-                                    AuditUsuarioModificacion = dr.ItemArray[8].ToString(),
-                                },
-                            });
+                            modelo.Add(Parsear.DataUsuarioModel(dr));
                         }
                     break;
                 }

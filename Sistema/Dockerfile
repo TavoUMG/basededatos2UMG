@@ -17,11 +17,10 @@ ENV DB_PASS "@Dmin12345."
 ENV DB_NAME "db_proyecto"
 
 #Variables de entorno
-ENV APP_NAME "Sistema"
+ENV APP_NAME "Sistema Tavo"
 ENV version "1.0"
 ENV versionInstalada "1.0"
 ENV versionRegistrada "1.0"
-
 
 ENV MailSmtpHost "smtp.gmail.com"
 ENV MailSmtpPort "465"

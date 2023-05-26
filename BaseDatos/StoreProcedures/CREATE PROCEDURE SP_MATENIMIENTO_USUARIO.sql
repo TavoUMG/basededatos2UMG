@@ -58,6 +58,11 @@ BEGIN
 			UPDATE USUARIO SET [Password] = @Password, [AuditUsuarioModificacion] = @Usuario
 			WHERE [Id] = @Id;
 		END
+		
+		IF (@Opcion = 8) --Opción para seleccionar uno por ID
+		BEGIN
+			SELECT * FROM USUARIO WHERE [id] = @Id;
+		END
 
 		COMMIT TRAN TRAN_MATENIMIENTO_USUARIO
 	END TRY

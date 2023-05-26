@@ -19,28 +19,47 @@ BEGIN
 	BEGIN TRY
 		BEGIN TRAN TRAN_MATENIMIENTO_CAJA
 
-		IF (@Opcion = 1) --Opción para devolver el listado completo
+		IF (@Opcion = 1) --Opciï¿½n para devolver el listado completo
 		BEGIN
 			SELECT * FROM CAJA;
 		END
 		
-		IF (@Opcion = 2) --Opción para crear
+		IF (@Opcion = 2) --Opciï¿½n para crear
 		BEGIN
-			INSERT INTO CAJA ([UsuarioId],[efectivoApertura], [efectivoCierre], [AuditUsuarioCreacion] ) 
-			VALUES (@UsuarioId, @efectivoApertura, @efectivoCierre, @Usuario);
+			INSERT INTO CAJA ([UsuarioId], [efectivoApertura], [efectivoCierre], [AuditUsuarioCreacion]) 
+			VALUES (@UsuarioId, @efectivoApertura, 0, @Usuario);
 		END
 		
-		IF (@Opcion = 3) --Opción para actualizar
+		IF (@Opcion = 3) --Opciï¿½n para actualizar
 		BEGIN
 			UPDATE CAJA SET [UsuarioId]= @UsuarioId, [efectivoApertura] = @efectivoApertura, 
 			[efectivoCierre] = @efectivoCierre, [AuditUsuarioModificacion] = @Usuario
 			WHERE [Id] = @Id;
 		END
 		
-		IF (@Opcion = 4) --Opción para eliminar
+		IF (@Opcion = 4) --Opciï¿½n para eliminar
 		BEGIN
 			DELETE FROM CAJA WHERE [Id] = @Id; 
-		END		
+		END	
+		
+		IF (@Opcion = 5) --Opciï¿½n para preguntar si existe caja abierta
+		BEGIN
+			SELECT * FROM CAJA 
+			WHERE [UsuarioId] = @UsuarioId 
+			AND [efectivoCierre] = 0;
+		END	
+		
+		IF (@Opcion = 6) --Opciï¿½n para cerrar la caja
+		BEGIN
+			UPDATE CAJA 
+			SET [efectivoCierre] = @efectivoCierre
+			WHERE [Id] = @Id;
+		END	
+
+		IF (@Opcion = 7) --Opciï¿½n para seleccionar por id
+		BEGIN
+			SELECT * FROM CAJA WHERE [Id] = @Id;
+		END	
 
 		COMMIT TRAN TRAN_MATENIMIENTO_CAJA
 	END TRY
