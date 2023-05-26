@@ -1,0 +1,9 @@
+﻿@model Sistema.Models.View.ModelBrandView;
+@{
+    <a asp-controller="@Model.controller.controller" asp-action="@Model.controller.action" class="brand-link text-sm logo-switch">
+        <img src="~/images/@Model.srcImageXS" alt="@Model.alt" class="brand-image logo-xs" style="opacity: .8" width="50%" />
+        <img src="~/images/@Model.srcImage" alt="@Model.alt" class="brand-image logo-xl" style="opacity: .8" width="50%" />
+        <!--img src="~/images/@Model.srcImageXS" alt="@Model.alt" class="brand-image elevation-3" style="opacity: .8">
+        <span-- class="brand-text font-weight-light">AdminLTE 3</span-->
+    </a>
+}

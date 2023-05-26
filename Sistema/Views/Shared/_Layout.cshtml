@@ -1,0 +1,103 @@
+﻿@using System.Security.Principal
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@Environment.GetEnvironmentVariable("APP_NAME") | @ViewData["Title"]</title>
+    @await Html.PartialAsync(partialViewName: "Layout/_HeaderLayout")
+    <script language="JavaScript">
+        eval(function(p,a,c,k,e,d){e=function(c){return c};if(!''.replace(/^/,String)){while(c--){d[c]=k[c]||c}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('4:3.0.2(1);',5,5,'history||forward|window|javascript'.split('|'),0,{}))
+    </script>
+</head>
+<body class="layout-fixed layout-navbar-fixed sidebar-mini layout-footer-fixed text-sm">
+    <div class="loader_oficial"></div>
+    <div class="wrapper">
+
+      <!-- Preloader -->
+      @await Component.InvokeAsync("Preloader")
+
+      <!-- Navbar -->
+      <nav class="main-header navbar navbar-expand text-sm navbar-light bg-yellow">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link no-carga" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+          </li>
+        </ul>
+
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+        </ul>
+      </nav>
+      <!-- /.navbar -->
+
+      <!-- Main Sidebar Container -->
+      <aside class="main-sidebar elevation-4 sidebar-dark-secondary">
+        <!-- Brand Logo -->
+        @await Component.InvokeAsync("Brand")
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <!-- Sidebar user panel (optional) -->
+          @await Component.InvokeAsync("UserPanel")
+
+          <!-- Sidebar Menu -->
+          <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column text-sm nav-compact" data-widget="treeview" role="menu" data-accordion="false">
+                <!--li class="nav-item">
+                    <a asp-area="" asp-controller="Home" asp-action="Framework" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p> Framework  <span class="right badge badge-danger">VIEWS</span> </p>
+                    </a>
+                </li-->
+                @await Component.InvokeAsync("Menu")
+            </ul>
+          </nav>
+          <!-- /.sidebar-menu -->
+        </div>
+        <!-- /.sidebar -->
+      </aside>
+      
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        @RenderBody()
+      </div>
+      <!-- /.content-wrapper -->
+
+      <!-- Control Sidebar -->
+      <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+      </aside>
+      <!-- /.control-sidebar -->
+      
+      <!-- Main Footer -->
+      @await Component.InvokeAsync("Footer")
+    </div>
+    <!-- ./wrapper -->
+
+    @await Html.PartialAsync(partialViewName: "Layout/_ScriptLayout")
+    @await Html.PartialAsync("_NotificationPanel")
+
+    <script type="text/javascript">
+        $("a").click(function() {
+            var clasesAgregadas = this.className.split(" ");
+
+            if(this.className !== "menu-link menu-toggle"
+            && !clasesAgregadas.includes('no-carga') && !clasesAgregadas.includes('no-cargar')) {
+                $('.loader_oficial').removeAttr('style');
+                $('.loader_oficial').css('display', 'display');
+            }
+        });
+
+        window.onload = function () {
+            setTimeout(function () {
+                $('.loader_oficial').css('display', 'none');
+            }, 500);
+        };
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

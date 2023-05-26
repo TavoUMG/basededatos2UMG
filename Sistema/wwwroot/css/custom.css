@@ -1,0 +1,20 @@
+﻿/* Style para errores del DataAnnotations */
+.field-validation-error {
+    color: red;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.btn-tofarma {
+    background-color: #2EBBC4 !important;
+    border-color: #2EBBC4 !important;
+}
+
+/* modal backdrop fix */
+.modal:nth-of-type(even) {
+    z-index: 1048 !important;
+}
+
+.modal-backdrop.show:nth-of-type(even) {
+    z-index: 1049 !important;
+}

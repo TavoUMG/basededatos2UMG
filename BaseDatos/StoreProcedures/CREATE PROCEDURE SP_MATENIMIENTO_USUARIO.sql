@@ -43,14 +43,20 @@ BEGIN
 			DELETE FROM USUARIO WHERE [Id] = @Id; 
 		END
 		
-		IF (@Opcion = 5) --Opción para eliminar
+		IF (@Opcion = 5) --Opción para seleccionar uno
 		BEGIN
 			SELECT * FROM USUARIO WHERE [CUI] = @CUI;
 		END
 		
-		IF (@Opcion = 6) --Opción para eliminar
+		IF (@Opcion = 6) --Opción para iniciar sesión
 		BEGIN
 			SELECT * FROM USUARIO WHERE [CUI] = @CUI AND [Password] = @Password;
+		END
+		
+		IF (@Opcion = 7) --Opción para nueva contraseña
+		BEGIN
+			UPDATE USUARIO SET [Password] = @Password, [AuditUsuarioModificacion] = @Usuario
+			WHERE [Id] = @Id;
 		END
 
 		COMMIT TRAN TRAN_MATENIMIENTO_USUARIO

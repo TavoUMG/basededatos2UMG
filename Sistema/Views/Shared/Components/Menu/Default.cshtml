@@ -1,0 +1,12 @@
+﻿@using Sistema.Models.View
+@model Sistema.Models.View.ModelMenuView
+
+@foreach (MENUITEM item in Model.items)
+{
+<li class="nav-item">
+    <a asp-area="" asp-controller="@item.controller" asp-action="@item.action" class="nav-link @Url.MakeActiveClass(@item.controller, @item.action)">
+        <i class="@item.icon"></i>
+        <p> @item.name</p>
+    </a>
+</li>    
+}

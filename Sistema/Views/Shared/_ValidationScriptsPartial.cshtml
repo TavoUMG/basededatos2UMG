@@ -1,0 +1,12 @@
+﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    $(function () {
+        $(document).ajaxComplete(function (a, xhr, c) {
+            if (xhr.status == 401 && xhr.responseText.indexOf("401") != -1) {
+                window.location.href = `@Url.Action("Exception", "Home")?title=${xhr.responseJSON.title}&code=${xhr.responseJSON.code}&error=${xhr.responseJSON.error}&description=${xhr.responseJSON.description}`;
+            }
+        });
+    });
+</script>
