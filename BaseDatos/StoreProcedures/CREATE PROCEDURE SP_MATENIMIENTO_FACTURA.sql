@@ -44,6 +44,11 @@ BEGIN
 			DELETE FROM FACTURA WHERE [Id] = @Id; 
 		END
 
+		IF (@Opcion = 5) --Opción para seleccionar uno por ID
+		BEGIN
+			SELECT * FROM FACTURA WHERE [Id] = @Id;
+		END
+
 		COMMIT TRAN TRAN_MATENIMIENTO_FACTURA
 	END TRY
 	BEGIN CATCH

@@ -43,6 +43,11 @@ BEGIN
 			DELETE FROM COMPRA WHERE [Id] = @Id; 
 		END		
 
+		IF (@Opcion = 5) --Opción para devolver el listado completo
+		BEGIN
+			SELECT * FROM COMPRA WHERE [Id] = @Id;
+		END
+
 		COMMIT TRAN TRAN_MATENIMIENTO_COMPRA
 	END TRY
 	BEGIN CATCH

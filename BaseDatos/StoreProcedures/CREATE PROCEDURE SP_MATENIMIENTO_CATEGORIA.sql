@@ -34,9 +34,14 @@ BEGIN
 			WHERE [Id] = @Id;
 		END
 		
-		IF (@Opcion = 4) --Opción para eliminar
+		IF (@Opcion = 4) --Opción para seleccionar por id
 		BEGIN
 			DELETE FROM CATEGORIA WHERE [Id] = @Id; 
+		END		
+		
+		IF (@Opcion = 5) --Opción para eliminar
+		BEGIN
+			SELECT * FROM CATEGORIA WHERE [Id] = @Id; 
 		END	
 
 		COMMIT TRAN TRAN_MATENIMIENTO_CATEGORIA

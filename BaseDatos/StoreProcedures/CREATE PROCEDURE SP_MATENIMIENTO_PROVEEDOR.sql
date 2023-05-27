@@ -42,6 +42,11 @@ BEGIN
 			DELETE FROM PROVEEDOR WHERE [Id] = @Id; 
 		END
 
+		IF (@Opcion = 5) --Opción para devolver el listado completo
+		BEGIN
+			SELECT * FROM PROVEEDOR WHERE [Id] = @Id;
+		END
+
 		COMMIT TRAN TRAN_MATENIMIENTO_PROVEEDOR
 	END TRY
 	BEGIN CATCH

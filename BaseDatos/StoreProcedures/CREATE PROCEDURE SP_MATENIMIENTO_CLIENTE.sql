@@ -43,6 +43,11 @@ BEGIN
 			DELETE FROM CLIENTE WHERE [Id] = @Id; 
 		END
 
+		IF (@Opcion = 5) --Opción para seleccionar uno por id
+		BEGIN
+			SELECT * FROM CLIENTE WHERE [Id] = @Id;
+		END
+
 		COMMIT TRAN TRAN_MATENIMIENTO_CLIENTE
 	END TRY
 	BEGIN CATCH

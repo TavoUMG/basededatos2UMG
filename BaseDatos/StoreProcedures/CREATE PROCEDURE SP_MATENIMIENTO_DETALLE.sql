@@ -44,6 +44,11 @@ BEGIN
 			DELETE FROM DETALLE WHERE [Id] = @Id; 
 		END
 
+		IF (@Opcion = 5) --Opción para seleccionar uno por ID
+		BEGIN
+			SELECT * FROM DETALLE WHERE [Id] = @Id;
+		END
+
 		COMMIT TRAN TRAN_MATENIMIENTO_DETALLE
 	END TRY
 	BEGIN CATCH
