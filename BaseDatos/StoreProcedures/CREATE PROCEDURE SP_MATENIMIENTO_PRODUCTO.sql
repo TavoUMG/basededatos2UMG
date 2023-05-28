@@ -9,7 +9,7 @@ GO
 CREATE PROCEDURE SP_MATENIMIENTO_PRODUCTO
 	@Opcion				INT,
 	@Id					INT = 0,
-	@Categoria			INT,
+	@CategoriaId		INT,
 	@Nombre				VARCHAR(75),
 	@Vencimiento		DATETIME = NULL,
 	@Usuario			NVARCHAR(150),
@@ -27,12 +27,12 @@ BEGIN
 		IF (@Opcion = 2) --Opción para crear
 		BEGIN
 			INSERT INTO PRODUCTO ([CategoriaId], [Nombre], [Vencimiento], [AuditUsuarioCreacion]) 
-			VALUES (@Categoria, @Nombre, @Vencimiento, @Usuario);
+			VALUES (@CategoriaId, @Nombre, @Vencimiento, @Usuario);
 		END
 		
 		IF (@Opcion = 3) --Opción para actualizar
 		BEGIN
-			UPDATE PRODUCTO SET [CategoriaId]=@Categoria, [Nombre] = @Nombre, [Vencimiento]=@Vencimiento,
+			UPDATE PRODUCTO SET [CategoriaId]=@CategoriaId, [Nombre] = @Nombre, [Vencimiento]=@Vencimiento,
 			 [AuditUsuarioModificacion] = @Usuario
 			WHERE [Id] = @Id;
 		END
