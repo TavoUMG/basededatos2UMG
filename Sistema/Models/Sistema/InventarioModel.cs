@@ -17,5 +17,6 @@
 
         public AuditoriaModel Auditoria = new AuditoriaModel();
 
+        public ProductoModel Producto = new ProductoModel();
     }
 }

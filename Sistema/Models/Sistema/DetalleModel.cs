@@ -26,5 +26,7 @@ namespace Sistema.Models.Sistema
         public decimal SubTotal { get; set; }
 
         public AuditoriaModel Auditoria = new AuditoriaModel();
+
+        public ProductoModel Producto = new ProductoModel();
     }
 }

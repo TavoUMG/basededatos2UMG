@@ -23,5 +23,10 @@ namespace Sistema.Models.Sistema
 
         public AuditoriaModel Auditoria = new AuditoriaModel();
 
+        public FacturaModel Factura = new FacturaModel();
+
+        public DetalleModel Detalle = new DetalleModel();
+
+        public ProductoModel Producto = new ProductoModel();
     }
 }

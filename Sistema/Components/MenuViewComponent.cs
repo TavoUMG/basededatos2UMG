@@ -19,7 +19,14 @@ namespace Sistema.Components
             {
                 ModelMenuView menu = new ModelMenuView();
 
-                var item = new MENUITEM() { controller = "Recetas", action = "ListaRecetas", name = "Listado de Recetas", icon = "fa-solid fa-file-prescription" };
+                MENUITEM item = new MENUITEM();
+
+                //Usuario
+                item = new MENUITEM() { controller = "Usuario", action = "Index", name = "Usuarios", icon = "fa-solid fa-circle" };
+                menu.items.Add(item);
+                item = new MENUITEM() { controller = "Usuario", action = "Insertar", name = "Usuario Insertar", icon = "fa-solid fa-circle" };
+                menu.items.Add(item);
+                item = new MENUITEM() { controller = "Usuario", action = "Actualizar", name = "Usuario Actualizar", icon = "fa-solid fa-circle" };
                 menu.items.Add(item);
 
                 item = new MENUITEM() { controller = "Home", action = "Logout", name = "Salir", icon = "fa-solid fa-door-open"};

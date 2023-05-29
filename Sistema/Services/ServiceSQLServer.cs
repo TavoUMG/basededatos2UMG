@@ -30,7 +30,7 @@ namespace Sistema.Services
                 parametroDB = new List<ParametroDB>();
 
                 parametroDB.Add(new ParametroDB("@Opcion", (int)option, ParametroDB.SType.Int, ParametroDB.EParameterDirection.input));
-                parametroDB.Add(new ParametroDB("@Id", 0, ParametroDB.SType.Int, ParametroDB.EParameterDirection.input));
+                parametroDB.Add(new ParametroDB("@Id", data.Id, ParametroDB.SType.Int, ParametroDB.EParameterDirection.input));
                 parametroDB.Add(new ParametroDB("@CUI", data.CUI, ParametroDB.SType.NVarChar, ParametroDB.EParameterDirection.input));
                 parametroDB.Add(new ParametroDB("@Nombre", data.Nombre, ParametroDB.SType.NVarChar, ParametroDB.EParameterDirection.input));
                 parametroDB.Add(new ParametroDB("@Apellido", data.Apellido, ParametroDB.SType.VarChar, ParametroDB.EParameterDirection.input));

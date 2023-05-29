@@ -26,5 +26,6 @@ namespace Sistema.Models.Sistema
 
         public AuditoriaModel Auditoria = new AuditoriaModel();
 
+        public CategoriaModel Categoria = new CategoriaModel();
     }
 }

@@ -24,5 +24,8 @@ namespace Sistema.Models.Sistema
 
         public AuditoriaModel Auditoria = new AuditoriaModel();
 
+        public ProductoModel Producto = new ProductoModel();
+
+        public ProveedorModel Proveedor = new ProveedorModel();
     }
 }

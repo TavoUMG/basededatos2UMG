@@ -31,6 +31,8 @@ namespace Sistema.Models.Sistema
 
         public AuditoriaModel Auditoria = new AuditoriaModel();
 
+        public ClienteModel Cliente = new ClienteModel();
+
         public List<DetalleModel> Detalle = new List<DetalleModel>();
     }
 }
