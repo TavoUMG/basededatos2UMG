@@ -1,0 +1,73 @@
+﻿@model Sistema.Models.Formulario.CajaForm
+
+<table id="DataTableCaja" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="text-align: center; vertical-align: middle;">ID</th>
+            <th style="text-align: center; vertical-align: middle;">Usuario</th>
+            <th style="text-align: center; vertical-align: middle;">Apertura</th>
+            <th style="text-align: center; vertical-align: middle;">Cierre</th>
+            <th style="text-align: center; vertical-align: middle;">Fecha Apertura</th>
+            <th style="text-align: center; vertical-align: middle;">Fecha Cierre</th>
+            <th style="text-align: center; vertical-align: middle;">Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.lista.Count; i++)
+        {
+            <tr>
+                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Id)</td>
+                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => $"{m.lista[i].Usuario.Nombre} {m.lista[i].Usuario.Apellido}")</td>
+                <td style="text-align: right; vertical-align: middle;">Q @Html.DisplayFor(m => m.lista[i].efectivoApertura)</td>     
+                <td style="text-align: right; vertical-align: middle;">Q @Html.DisplayFor(m => m.lista[i].efectivoCierre)</td>   
+                <td style="text-align: center; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Auditoria.AuditFechaCreacion)</td>    
+                <td style="text-align: center; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Auditoria.AuditFechaModificacion)</td>               
+                <td style="text-align: center; vertical-align: middle;">
+                    <table class="table table-bordered text-center">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a onclick="actualizar(
+                                        @Model.lista[i].Id
+                                        0,
+                                        @Model.lista[i].efectivoApertura,
+                                        @Model.lista[i].efectivoCierre,
+                                        1
+                                    )" class="btn btn-md btn-primary">CERRAR CAJA</a>
+                                </td>
+                                <td>
+                                    <a onclick="actualizar(
+                                        @Model.lista[i].Id
+                                        @Model.lista[i].UsuarioId,
+                                        @Model.lista[i].efectivoApertura,
+                                        @Model.lista[i].efectivoCierre,
+                                        0
+                                    )" class="btn btn-md btn-warning">ACTUALIZAR</a>
+                                </td>
+                                <td>
+                                    <a onclick="eliminar(@Model.lista[i].Id)" class="btn btn-md btn-info">ELIMINAR</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#DataTableCaja').DataTable({
+          "paging": true,
+          "lengthChange": true,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": true,
+          "responsive": true,
+          lengthMenu: [10, @Model.lista.Count],
+          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#DataTable_wrapper .col-md-6:eq(0)');
+    });
+</script>
