@@ -1,8 +1,12 @@
-﻿@model Sistema.Models.Formulario.UsuarioForm
+﻿@model Sistema.Models.Formulario.InventarioForm
 
 @{
-    ViewData["Title"] = "ADMINISTRAR USUARIOS";
+    ViewData["Title"] = "ADMINISTRAR INVENTARIOS";
     Layout = "_Layout";
+    string formId = "FormInventario";
+    string buttonId = "btnInventario";
+    string divTableId = "divDataTableInventario";
+    string partialViewName = "DataTable/_InventarioTable";
 }
 
 
@@ -30,34 +34,30 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-<div class="col-md-12">
-    <form id="FormUsuario" method="POST" autocomplete="off">
+<div class="col-md-4">
+    <form id="@formId" method="POST" autocomplete="off">
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)
 
         <div class="row">
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-12">
                 <div class="form-group">
-                    <label asp-for="CUI"><span class="text-danger">*</span> CUI</label>
-                    <input asp-for="CUI" type="text" class="form-control" data-val="false" />
+                    <label asp-for="ProductoId"><span class="text-danger">*</span> Producto</label>
+                    <select asp-for="ProductoId" class="form-control select2" data-val="false" asp-items="@(new SelectList(Model.productos,"Id","Nombre",Model.ProductoId))">
+                        <option value="0">Seleccion uno por favor</option>
+                    </select>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-12">
                 <div class="form-group">
-                    <label asp-for="Nombre"><span class="text-danger">*</span> Nombre</label>
-                    <input asp-for="Nombre" type="text" class="form-control" data-val="false" />
+                    <label asp-for="PrecioVenta"><span class="text-danger">*</span> Precio de Venta Q</label>
+                    <input asp-for="PrecioVenta" type="text" class="form-control" data-val="false" />
                 </div>
             </div>
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-12">
                 <div class="form-group">
-                    <label asp-for="Apellido"><span class="text-danger">*</span> Apellido</label>
-                    <input asp-for="Apellido" type="text" class="form-control" data-val="false" />
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-4" id="divPassword">
-                <div class="form-group">
-                    <label asp-for="Password"><span class="text-danger">*</span> Password</label>
-                    <input asp-for="Password" type="password" class="form-control" data-val="false" />
+                    <label asp-for="Stock"><span class="text-danger">*</span> Stock</label>
+                    <input asp-for="Stock" type="number" class="form-control" data-val="false" />
                 </div>
             </div>
         </div>
@@ -68,16 +68,13 @@
             </div>
             <div class="col-sm-12 col-md-6">
                 <br /><br />
-                <button id="btnUsuario" type="submit" class="btn btn-block btn-primary">Guardar</button>
+                <button id="@buttonId" type="submit" class="btn btn-block btn-primary">Guardar</button>
             </div>
         </div>
     </form>
 </div>
-<div class="col-md-12 mb-3">
-    <hr />
-</div>
-<div class="col-md-12 mb-3" id="divDataTableUser">
-@await Html.PartialAsync(partialViewName: "DataTable/_UsuarioTable", model: Model)
+<div class="col-md-8 mb-3" id="@divTableId">
+@await Html.PartialAsync(partialViewName: partialViewName, model: Model)
 </div>
                         </div>
                     </div>   
@@ -90,57 +87,48 @@
 <!-- /.content -->
 
 <script type="text/javascript">
-    var _form = "#FormUsuario";
-    var _btn  = "#btnUsuario";
-    var _div  = "#divDataTableUser";
-    var _title = "¡Guardar Usuario!";
-    var _url = '@Url.Action("Insertar", "Usuario")';
+    var _form = "#"+'@formId';
+    var _btn  = "#"+'@buttonId';
+    var _div  = "#"+'@divTableId';
+    var _title = "¡Guardar!";
 
     $(document).ready(function () {
         $('.select2').select2();
+
         $(_form).validate({
             rules: {
-                "CUI": { 
-                    required: true , 
-                    minlength: 13, 
-                    maxlength: 13, 
+                "ProductoId": { 
+                    required: true, 
+                    number: true, 
+                    min: 1,
                     remote: {
-                        url: '@Url.Action("Exists", "Usuario")',
+                        url: '@Url.Action("Exists", "Inventario")',
                         type: "post",
                         data: {
-                            CUI: function() {
-                                return $("#CUI").val();
+                            ProductoId: function() {
+                                return $("#ProductoId").val();
                             }
                         }
-                    }, 
-                    digits: true
+                    },  
                 },
-                "Nombre": { required: true , minlength: 3, maxlength: 75 },
-                "Apellido": { required: true , minlength: 3, maxlength: 75 },
-                "Password": { required: true , minlength: 6, maxlength: 20 }
+                "PrecioVenta": { required: true, range: [0.25, 10000] },
+                "Stock": { required: true, number: true, min: 1 },
             },
             messages: {
-                "CUI": {
-                    required: "El CUI es obligatorio",
-                    minlength: "El CUI debe de tener 13 caracteres.",
-                    maxlength: "El CUI debe de tener 13 caracteres.",
-                    remote: "El CUI ya se encuentra en uso",
-                    digits: "El CUI solo acepta números"
+                "ProductoId": {
+                    required: "El producto es obligatorio",
+                    number: "El producto solo acepta números",
+                    min: "El producto debe ser mayor a 0",
+                    remote: "El producto que trata de registrar ya existe"
                 },
-                "Nombre": {
-                    required: "El nombre es obligatorio",
-                    minlength: "El nombre debe de tener más de 3 caracteres.",
-                    maxlength: "El nombre debe de tener menos de 75 caracteres."
+                "PrecioVenta": {
+                    required: "El precio de venta es obligatorio",
+                    range: "El precio de venta de tener más de 0.25 y menos de 10,000"
                 },
-                "Apellido": {
-                    required: "El apellido es obligatorio",
-                    minlength: "El apellido debe de tener más de 3 caracteres.",
-                    maxlength: "El apellido debe de tener menos de 75 caracteres."
-                },
-                "Password": {
-                    required: "La contraseña es obligatoria",
-                    minlength: "La contraseña debe de tener más de 6 caracteres.",
-                    maxlength: "La contraseña debe de tener menos de 20 caracteres."
+                "Stock": {
+                    required: "El stock es obligatorio",
+                    number: "El stock solo acepta números",
+                    min: "El stock debe ser mayor a 0"
                 },
             },
             errorElement: 'span',
@@ -203,7 +191,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: $("#Id").val() == 0 ? _url : '@Url.Action("Actualizar", "Usuario")',
+                        url: $("#Id").val() == 0 ? '@Url.Action("Insertar", "Inventario")' : '@Url.Action("Actualizar", "Inventario")',
                         headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                         method:'POST',
                         data: $(_form).serialize(),
@@ -258,7 +246,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '@Url.Action("Eliminar", "Usuario")',
+                    url: '@Url.Action("Eliminar", "Inventario")',
                     method:'POST',
                     headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                     data: {
@@ -286,24 +274,20 @@
         })
     }
 
-    function actualizar(id, cui, nombre, apellido) {
+    function actualizar(id, productoId, precioVenta, stock) {
         limpiar();
-        $("#divPassword").hide();
-        
+
         $("#Id").val(id)
-        $("#CUI").val(cui)
-        $("#Nombre").val(nombre)
-        $("#Apellido").val(apellido)
+        $("#ProductoId").val(productoId).change();
+        $("#PrecioVenta").val(precioVenta)
+        $("#Stock").val(stock)
     }
 
     function limpiar() {
-        $("#divPassword").show();
-
         $("#Id").val(0)
-        $("#CUI").val("")
-        $("#Nombre").val("")
-        $("#Apellido").val("")
-        $("#Password").val("")
+        $("#ProductoId").val(0).change();
+        $("#PrecioVenta").val("")
+        $("#Stock").val("")
     }
     
 	function errorDialog(e) {

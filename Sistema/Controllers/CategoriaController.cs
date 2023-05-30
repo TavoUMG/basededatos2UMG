@@ -61,7 +61,7 @@ namespace Sistema.Controllers
                 (respuesta, mensaje, _form.lista) = _service.ServiceCategoria(Models.Sistema.OptionCategoria.TODOS, new Models.Sistema.CategoriaModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
 
-                return PartialView(viewName: _dataTable, model: form);
+                return PartialView(viewName: _dataTable, model: _form);
             }
             catch (Exception ex)
             {
@@ -88,7 +88,7 @@ namespace Sistema.Controllers
                 (respuesta, mensaje, _form.lista) = _service.ServiceCategoria(Models.Sistema.OptionCategoria.TODOS, new Models.Sistema.CategoriaModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
 
-                return PartialView(viewName: _dataTable, model: form);
+                return PartialView(viewName: _dataTable, model: _form);
             }
             catch (Exception ex)
             {

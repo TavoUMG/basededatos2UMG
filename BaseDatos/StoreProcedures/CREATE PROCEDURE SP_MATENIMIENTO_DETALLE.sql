@@ -14,37 +14,36 @@ CREATE PROCEDURE SP_MATENIMIENTO_DETALLE
 	@Cantidad			INT = NULL,
 	@Precio				DECIMAL(20,2),
 	@SubTotal			DECIMAL(20,2),
-	@Usuario			NVARCHAR(150),
-	@Respuesta			NVARCHAR(MAX) = NULL OUTPUT
+	@Usuario			NVARCHAR(150)
 AS
 BEGIN
 	BEGIN TRY
 		BEGIN TRAN TRAN_MATENIMIENTO_DETALLE
 
-		IF (@Opcion = 1) --Opción para devolver el listado completo
+		IF (@Opcion = 1) --Opciï¿½n para devolver el listado completo
 		BEGIN
 			SELECT * FROM DETALLE;
 		END
 		
-		IF (@Opcion = 2) --Opción para crear
+		IF (@Opcion = 2) --Opciï¿½n para crear
 		BEGIN
 			INSERT INTO DETALLE ([FacturaId], [ProductoId], [Cantidad], [Precio], [SubTotal], [AuditUsuarioCreacion]) 
 			VALUES (@FacturaId, @ProductoId, @Cantidad, @Precio, @SubTotal, @Usuario);
 		END
 		
-		IF (@Opcion = 3) --Opción para actualizar
+		IF (@Opcion = 3) --Opciï¿½n para actualizar
 		BEGIN
 			UPDATE DETALLE SET [FacturaId]=@FacturaId, [ProductoId]=@ProductoId, [Cantidad]=@Cantidad, [Precio]=@Precio, [SubTotal]=@SubTotal,
 			 [AuditUsuarioModificacion] = @Usuario
 			WHERE [Id] = @Id;
 		END
 		
-		IF (@Opcion = 4) --Opción para eliminar
+		IF (@Opcion = 4) --Opciï¿½n para eliminar
 		BEGIN
 			DELETE FROM DETALLE WHERE [Id] = @Id; 
 		END
 
-		IF (@Opcion = 5) --Opción para seleccionar uno por ID
+		IF (@Opcion = 5) --Opciï¿½n para seleccionar uno por ID
 		BEGIN
 			SELECT * FROM DETALLE WHERE [Id] = @Id;
 		END
@@ -53,7 +52,7 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRAN TRAN_MATENIMIENTO_DETALLE
-		SET @Respuesta = ERROR_MESSAGE()
+		SELECT ERROR_MESSAGE();
 	END CATCH
 END
 GO

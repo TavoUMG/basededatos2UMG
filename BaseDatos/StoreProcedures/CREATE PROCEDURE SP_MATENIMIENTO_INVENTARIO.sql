@@ -12,37 +12,36 @@ CREATE PROCEDURE SP_MATENIMIENTO_INVENTARIO
 	@ProductoId			INT,
 	@PrecioVenta		DECIMAL(20,2),
 	@Stock				INT,	
-	@Usuario			NVARCHAR(150),
-	@Respuesta			NVARCHAR(MAX) = NULL OUTPUT
+	@Usuario			NVARCHAR(150)
 AS
 BEGIN
 	BEGIN TRY
 		BEGIN TRAN TRAN_MATENIMIENTO_INVENTARIO
 
-		IF (@Opcion = 1) --Opción para devolver el listado completo
+		IF (@Opcion = 1) --Opciï¿½n para devolver el listado completo
 		BEGIN
 			SELECT * FROM INVENTARIO;
 		END
 		
-		IF (@Opcion = 2) --Opción para crear
+		IF (@Opcion = 2) --Opciï¿½n para crear
 		BEGIN
 			INSERT INTO INVENTARIO ([ProductoId],[PrecioVenta],[Stock],[AuditUsuarioCreacion]) 
 			VALUES (@ProductoId	, @PrecioVenta, @Stock, @Usuario);
 		END
 		
-		IF (@Opcion = 3) --Opción para actualizar
+		IF (@Opcion = 3) --Opciï¿½n para actualizar
 		BEGIN
 			UPDATE INVENTARIO SET [ProductoId]=@ProductoId, [PrecioVenta]=@PrecioVenta, [Stock]=@Stock, 
 			 [AuditUsuarioModificacion] = @Usuario
 			WHERE [Id] = @Id;
 		END
 		
-		IF (@Opcion = 4) --Opción para eliminar
+		IF (@Opcion = 4) --Opciï¿½n para eliminar
 		BEGIN
 			DELETE FROM INVENTARIO WHERE [Id] = @Id; 
 		END
 
-		IF (@Opcion = 5) --Opción para seleccionar uno por ID
+		IF (@Opcion = 5) --Opciï¿½n para seleccionar uno por ID
 		BEGIN
 			SELECT * FROM INVENTARIO WHERE [Id] = @Id;
 		END
@@ -56,7 +55,7 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRAN TRAN_MATENIMIENTO_INVENTARIO
-		SET @Respuesta = ERROR_MESSAGE()
+		SELECT ERROR_MESSAGE();
 	END CATCH
 END
 GO

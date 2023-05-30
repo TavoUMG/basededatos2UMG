@@ -14,37 +14,36 @@ CREATE PROCEDURE SP_MATENIMIENTO_DEVOLUCION
 	@DetalleId			INT,
 	@ProductoId			INT,
 	@Fecha				DATETIME = NULL,
-	@Usuario			NVARCHAR(150),
-	@Respuesta			NVARCHAR(MAX) = NULL OUTPUT
+	@Usuario			NVARCHAR(150)
 AS
 BEGIN
 	BEGIN TRY
 		BEGIN TRAN TRAN_MATENIMIENTO_DEVOLUCION
 
-		IF (@Opcion = 1) --Opción para devolver el listado completo
+		IF (@Opcion = 1) --Opciï¿½n para devolver el listado completo
 		BEGIN
 			SELECT * FROM DEVOLUCION;
 		END
 		
-		IF (@Opcion = 2) --Opción para crear
+		IF (@Opcion = 2) --Opciï¿½n para crear
 		BEGIN
 			INSERT INTO DEVOLUCION ([Cantidad], [FacturaId], [DetalleId], [ProductoId], [Fecha], [AuditUsuarioCreacion]) 
 			VALUES (@Cantidad, @FacturaId, @DetalleId, @ProductoId, @Fecha, @Usuario);
 		END
 		
-		IF (@Opcion = 3) --Opción para actualizar
+		IF (@Opcion = 3) --Opciï¿½n para actualizar
 		BEGIN
 			UPDATE DEVOLUCION SET [Cantidad]=@Cantidad, [FacturaId]=@FacturaId,[DetalleId]=@DetalleId, [ProductoId]=@ProductoId, [Fecha]=@Fecha,
 			 [AuditUsuarioModificacion] = @Usuario
 			WHERE [Id] = @Id;
 		END
 		
-		IF (@Opcion = 4) --Opción para eliminar
+		IF (@Opcion = 4) --Opciï¿½n para eliminar
 		BEGIN
 			DELETE FROM DEVOLUCION WHERE [Id] = @Id; 
 		END
 
-		IF (@Opcion = 5) --Opción para seleccionar uno por ID
+		IF (@Opcion = 5) --Opciï¿½n para seleccionar uno por ID
 		BEGIN
 			SELECT * FROM DEVOLUCION WHERE [Id] = @Id;
 		END
@@ -53,7 +52,7 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRAN TRAN_MATENIMIENTO_DEVOLUCION
-		SET @Respuesta = ERROR_MESSAGE()
+		SELECT ERROR_MESSAGE();
 	END CATCH
 END
 GO

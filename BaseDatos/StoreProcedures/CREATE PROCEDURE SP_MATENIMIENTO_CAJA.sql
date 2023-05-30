@@ -12,8 +12,7 @@ CREATE PROCEDURE SP_MATENIMIENTO_CAJA
 	@UsuarioId			INT,
 	@efectivoApertura	Decimal(20,2) = NULL,
 	@efectivoCierre		Decimal(20,2) = NULL,
-	@Usuario			NVARCHAR(150),
-	@Respuesta			NVARCHAR(MAX) = NULL OUTPUT
+	@Usuario			NVARCHAR(150)
 AS
 BEGIN
 	BEGIN TRY

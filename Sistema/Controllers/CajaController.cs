@@ -64,7 +64,7 @@ namespace Sistema.Controllers
                 (respuesta, mensaje, _form.lista) = _service.ServiceCaja(Models.Sistema.OptionCaja.TODOS, new Models.Sistema.CajaModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
 
-                return PartialView(viewName: _dataTable, model: form);
+                return PartialView(viewName: _dataTable, model: _form);
             }
             catch (Exception ex)
             {
@@ -93,7 +93,7 @@ namespace Sistema.Controllers
                 (respuesta, mensaje, _form.lista) = _service.ServiceCaja(Models.Sistema.OptionCaja.TODOS, new Models.Sistema.CajaModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
 
-                return PartialView(viewName: _dataTable, model: form);
+                return PartialView(viewName: _dataTable, model: _form);
             }
             catch (Exception ex)
             {
@@ -122,7 +122,7 @@ namespace Sistema.Controllers
                 (respuesta, mensaje, _form.lista) = _service.ServiceCaja(Models.Sistema.OptionCaja.TODOS, new Models.Sistema.CajaModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
 
-                return PartialView(viewName: _dataTable, model: form);
+                return PartialView(viewName: _dataTable, model: _form);
             }
             catch (Exception ex)
             {

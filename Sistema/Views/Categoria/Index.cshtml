@@ -1,8 +1,12 @@
-﻿@model Sistema.Models.Formulario.UsuarioForm
+﻿@model Sistema.Models.Formulario.CategoriaForm
 
 @{
-    ViewData["Title"] = "ADMINISTRAR USUARIOS";
+    ViewData["Title"] = "ADMINISTRAR CATEGORIAS";
     Layout = "_Layout";
+    string formId = "FormCategoria";
+    string buttonId = "btnCategoria";
+    string divTableId = "divDataTableCategoria";
+    string partialViewName = "DataTable/_CategoriaTable";
 }
 
 
@@ -30,34 +34,16 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-<div class="col-md-12">
-    <form id="FormUsuario" method="POST" autocomplete="off">
+<div class="col-md-4">
+    <form id="@formId" method="POST" autocomplete="off">
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)
 
         <div class="row">
-            <div class="col-sm-12 col-md-4">
-                <div class="form-group">
-                    <label asp-for="CUI"><span class="text-danger">*</span> CUI</label>
-                    <input asp-for="CUI" type="text" class="form-control" data-val="false" />
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-4">
+            <div class="col-sm-12 col-md-12">
                 <div class="form-group">
                     <label asp-for="Nombre"><span class="text-danger">*</span> Nombre</label>
                     <input asp-for="Nombre" type="text" class="form-control" data-val="false" />
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-4">
-                <div class="form-group">
-                    <label asp-for="Apellido"><span class="text-danger">*</span> Apellido</label>
-                    <input asp-for="Apellido" type="text" class="form-control" data-val="false" />
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-4" id="divPassword">
-                <div class="form-group">
-                    <label asp-for="Password"><span class="text-danger">*</span> Password</label>
-                    <input asp-for="Password" type="password" class="form-control" data-val="false" />
                 </div>
             </div>
         </div>
@@ -68,16 +54,13 @@
             </div>
             <div class="col-sm-12 col-md-6">
                 <br /><br />
-                <button id="btnUsuario" type="submit" class="btn btn-block btn-primary">Guardar</button>
+                <button id="@buttonId" type="submit" class="btn btn-block btn-primary">Guardar</button>
             </div>
         </div>
     </form>
 </div>
-<div class="col-md-12 mb-3">
-    <hr />
-</div>
-<div class="col-md-12 mb-3" id="divDataTableUser">
-@await Html.PartialAsync(partialViewName: "DataTable/_UsuarioTable", model: Model)
+<div class="col-md-8 mb-3" id="@divTableId">
+@await Html.PartialAsync(partialViewName: partialViewName, model: Model)
 </div>
                         </div>
                     </div>   
@@ -90,57 +73,21 @@
 <!-- /.content -->
 
 <script type="text/javascript">
-    var _form = "#FormUsuario";
-    var _btn  = "#btnUsuario";
-    var _div  = "#divDataTableUser";
-    var _title = "¡Guardar Usuario!";
-    var _url = '@Url.Action("Insertar", "Usuario")';
+    var _form = "#"+'@formId';
+    var _btn  = "#"+'@buttonId';
+    var _div  = "#"+'@divTableId';
+    var _title = "¡Guardar!";
 
     $(document).ready(function () {
-        $('.select2').select2();
         $(_form).validate({
             rules: {
-                "CUI": { 
-                    required: true , 
-                    minlength: 13, 
-                    maxlength: 13, 
-                    remote: {
-                        url: '@Url.Action("Exists", "Usuario")',
-                        type: "post",
-                        data: {
-                            CUI: function() {
-                                return $("#CUI").val();
-                            }
-                        }
-                    }, 
-                    digits: true
-                },
-                "Nombre": { required: true , minlength: 3, maxlength: 75 },
-                "Apellido": { required: true , minlength: 3, maxlength: 75 },
-                "Password": { required: true , minlength: 6, maxlength: 20 }
+                "Nombre": { required: true , minlength: 3, maxlength: 75 }
             },
             messages: {
-                "CUI": {
-                    required: "El CUI es obligatorio",
-                    minlength: "El CUI debe de tener 13 caracteres.",
-                    maxlength: "El CUI debe de tener 13 caracteres.",
-                    remote: "El CUI ya se encuentra en uso",
-                    digits: "El CUI solo acepta números"
-                },
                 "Nombre": {
                     required: "El nombre es obligatorio",
                     minlength: "El nombre debe de tener más de 3 caracteres.",
                     maxlength: "El nombre debe de tener menos de 75 caracteres."
-                },
-                "Apellido": {
-                    required: "El apellido es obligatorio",
-                    minlength: "El apellido debe de tener más de 3 caracteres.",
-                    maxlength: "El apellido debe de tener menos de 75 caracteres."
-                },
-                "Password": {
-                    required: "La contraseña es obligatoria",
-                    minlength: "La contraseña debe de tener más de 6 caracteres.",
-                    maxlength: "La contraseña debe de tener menos de 20 caracteres."
                 },
             },
             errorElement: 'span',
@@ -203,7 +150,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: $("#Id").val() == 0 ? _url : '@Url.Action("Actualizar", "Usuario")',
+                        url: $("#Id").val() == 0 ? '@Url.Action("Insertar", "Categoria")' : '@Url.Action("Actualizar", "Categoria")',
                         headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                         method:'POST',
                         data: $(_form).serialize(),
@@ -258,7 +205,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '@Url.Action("Eliminar", "Usuario")',
+                    url: '@Url.Action("Eliminar", "Categoria")',
                     method:'POST',
                     headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                     data: {
@@ -286,24 +233,16 @@
         })
     }
 
-    function actualizar(id, cui, nombre, apellido) {
+    function actualizar(id, nombre) {
         limpiar();
-        $("#divPassword").hide();
         
         $("#Id").val(id)
-        $("#CUI").val(cui)
         $("#Nombre").val(nombre)
-        $("#Apellido").val(apellido)
     }
 
     function limpiar() {
-        $("#divPassword").show();
-
         $("#Id").val(0)
-        $("#CUI").val("")
         $("#Nombre").val("")
-        $("#Apellido").val("")
-        $("#Password").val("")
     }
     
 	function errorDialog(e) {

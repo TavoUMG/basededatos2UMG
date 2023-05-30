@@ -19,16 +19,20 @@
                 <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Producto.Nombre)</td>
                 <td style="text-align: right; vertical-align: middle;">Q @Html.DisplayFor(m => m.lista[i].PrecioVenta)</td>     
                 <td style="text-align: center; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Stock)</td>   
-                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Activo ? "ACTIVO" : "INACTIVO")</td>                 
+                @if(Model.lista[i].Activo) {
+                    <td style="text-align: center; vertical-align: middle;">SI</td>     
+                } else {
+                    <td style="text-align: center; vertical-align: middle;">NO</td>     
+                }
                 <td style="text-align: center; vertical-align: middle;">
                     <table class="table table-bordered text-center">
                         <tbody>
                             <tr>
                                 <td>
                                     <a onclick="actualizar(
-                                        @Model.lista[i].Id
+                                        @Model.lista[i].Id,
                                         @Model.lista[i].ProductoId,
-                                        @Model.lista[i].PrecioVenta,
+                                        '@Model.lista[i].PrecioVenta',
                                         @Model.lista[i].Stock
                                     )" class="btn btn-md btn-warning">ACTUALIZAR</a>
                                 </td>

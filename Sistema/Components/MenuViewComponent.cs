@@ -22,23 +22,23 @@ namespace Sistema.Components
                 MENUITEM item = new MENUITEM();
 
                 //Usuario
-                item = new MENUITEM() { controller = "Usuario", action = "Index", name = "Usuarios", icon = "fa-solid fa-circle" };
+                item = new MENUITEM() { controller = "Usuario", action = "Index", name = "Usuarios", icon = "fa-solid fa-users" };
                 menu.items.Add(item);
 
                 //Cliente
-                item = new MENUITEM() { controller = "Cliente", action = "Index", name = "Clientes", icon = "fa-solid fa-circle" };
+                item = new MENUITEM() { controller = "Cliente", action = "Index", name = "Clientes", icon = "fa-solid fa-user-tie" };
                 menu.items.Add(item);
 
                 //Proveedor
-                item = new MENUITEM() { controller = "Proveedor", action = "Index", name = "Proveedores", icon = "fa-solid fa-circle" };
+                item = new MENUITEM() { controller = "Proveedor", action = "Index", name = "Proveedores", icon = "fa-solid fa-user-tag" };
                 menu.items.Add(item);
 
-                //Catálogo
-                item = new MENUITEM() { controller = "Catalogo", action = "Index", name = "Catálogos", icon = "fa-solid fa-circle" };
+                //Categoría
+                item = new MENUITEM() { controller = "Categoria", action = "Index", name = "Categorías", icon = "fa-solid fa-bookmark" };
                 menu.items.Add(item);
 
                 //Producto
-                item = new MENUITEM() { controller = "Producto", action = "Index", name = "Productos", icon = "fa-solid fa-circle" };
+                item = new MENUITEM() { controller = "Producto", action = "Index", name = "Productos", icon = "fa-solid fa-truck-front" };
                 menu.items.Add(item);
 
                 //Caja
@@ -46,7 +46,7 @@ namespace Sistema.Components
                 menu.items.Add(item);
 
                 //Inventario
-                item = new MENUITEM() { controller = "Inventario", action = "Index", name = "Inventarios", icon = "fa-solid fa-circle" };
+                item = new MENUITEM() { controller = "Inventario", action = "Index", name = "Inventarios", icon = "fa-solid fa-shop" };
                 menu.items.Add(item);
 
                 //Compra

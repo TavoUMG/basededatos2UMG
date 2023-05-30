@@ -8,14 +8,12 @@ namespace Sistema.Services
 {
     public class ServiceSQLServer
     {
-        private ClassSeguridad _seguridad;
         private string _conexion = String.Empty;
         private BaseDatos _baseDatos;
         private List<ParametroDB> parametroDB;
 
         public ServiceSQLServer()
         {
-            _seguridad = new ClassSeguridad();
             _conexion = Environment.GetEnvironmentVariable("CONEXION_STRING");
         }
 
@@ -36,7 +34,7 @@ namespace Sistema.Services
                 parametroDB.Add(new ParametroDB("@Apellido", data.Apellido, ParametroDB.SType.VarChar, ParametroDB.EParameterDirection.input));
                 parametroDB.Add(new ParametroDB("@Password", data.Password, ParametroDB.SType.VarChar, ParametroDB.EParameterDirection.input));
                 parametroDB.Add(new ParametroDB("@Usuario", UsuarioAudita, ParametroDB.SType.VarChar, ParametroDB.EParameterDirection.input));
-                parametroDB.Add(new ParametroDB("@Respuesta", info, ParametroDB.SType.VarChar, ParametroDB.EParameterDirection.input));
+
                 respuesta = _baseDatos.executeSP("SP_MATENIMIENTO_USUARIO", parametroDB, BaseDatos.ReturnTypes.Dataset);
                 if (!respuesta) throw new Exception(_baseDatos.getMessage());
                 info = String.IsNullOrEmpty(info) ? $"No pudimos realizar el proceso seleccionado." : info;
@@ -55,6 +53,9 @@ namespace Sistema.Services
                             modelo.Add(Parsear.DataUsuarioModel(dr));
                         }
                     break;
+                    default:
+                        if (_baseDatos.getDataset().Tables.Count != 0 && _baseDatos.getDataset().Tables[0].Rows.Count == 1) throw new Exception(_baseDatos.getDataset().Tables[0].Rows[0].ItemArray[0].ToString());
+                        break;
                 }
             }
             catch (Exception ex)
@@ -86,8 +87,6 @@ namespace Sistema.Services
                 parametroDB.Add(new ParametroDB("@efectivoApertura",data.efectivoApertura,ParametroDB.SType.Decimal));
                 parametroDB.Add(new ParametroDB("@efectivoCierre",data.efectivoCierre,ParametroDB.SType.Decimal));
                 parametroDB.Add(new ParametroDB("@Usuario",UsuarioAudita,ParametroDB.SType.NVarChar));
-                parametroDB.Add(new ParametroDB("@Respuesta",info,ParametroDB.SType.NVarChar,ParametroDB.EParameterDirection.output));
-
 
                 respuesta = _baseDatos.executeSP("SP_MATENIMIENTO_CAJA", parametroDB, BaseDatos.ReturnTypes.Dataset);
                 if (!respuesta) throw new Exception(_baseDatos.getMessage());
@@ -104,6 +103,9 @@ namespace Sistema.Services
                         {
                             modelo.Add(Parsear.DataCajaModel(dr));
                         }
+                        break;
+                    default:
+                        if (_baseDatos.getDataset().Tables.Count != 0 && _baseDatos.getDataset().Tables[0].Rows.Count == 1) throw new Exception(_baseDatos.getDataset().Tables[0].Rows[0].ItemArray[0].ToString());
                         break;
                 }
             }
@@ -134,8 +136,6 @@ namespace Sistema.Services
                 parametroDB.Add(new ParametroDB("@Id", data.Id, ParametroDB.SType.Int));
                 parametroDB.Add(new ParametroDB("@Nombre", data.Nombre, ParametroDB.SType.NVarChar));
                 parametroDB.Add(new ParametroDB("@Usuario", UsuarioAudita, ParametroDB.SType.NVarChar));
-                parametroDB.Add(new ParametroDB("@Respuesta", info, ParametroDB.SType.NVarChar, ParametroDB.EParameterDirection.output));
-
 
                 respuesta = _baseDatos.executeSP("SP_MATENIMIENTO_CATEGORIA", parametroDB, BaseDatos.ReturnTypes.Dataset);
                 if (!respuesta) throw new Exception(_baseDatos.getMessage());
@@ -143,7 +143,6 @@ namespace Sistema.Services
 
                 switch (option)
                 {
-
                     case OptionCategoria.TODOS:
                     case OptionCategoria.SELECCIONAR_ID:
                         if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
@@ -153,6 +152,9 @@ namespace Sistema.Services
                         {
                             modelo.Add(Parsear.DataCategoriaModel(dr));
                         }
+                        break;
+                    default:
+                        if (_baseDatos.getDataset().Tables.Count != 0 && _baseDatos.getDataset().Tables[0].Rows.Count == 1) throw new Exception(_baseDatos.getDataset().Tables[0].Rows[0].ItemArray[0].ToString());
                         break;
                 }
             }
@@ -186,8 +188,6 @@ namespace Sistema.Services
                 parametroDB.Add(new ParametroDB("@Telefono", data.Telefono, ParametroDB.SType.NVarChar));
                 parametroDB.Add(new ParametroDB("@Direccion", data.Direccion, ParametroDB.SType.NVarChar));
                 parametroDB.Add(new ParametroDB("@Usuario", UsuarioAudita, ParametroDB.SType.NVarChar));
-                parametroDB.Add(new ParametroDB("@Respuesta", info, ParametroDB.SType.NVarChar, ParametroDB.EParameterDirection.output));
-
 
                 respuesta = _baseDatos.executeSP("SP_MATENIMIENTO_CLIENTE", parametroDB, BaseDatos.ReturnTypes.Dataset);
                 if (!respuesta) throw new Exception(_baseDatos.getMessage());
@@ -205,6 +205,9 @@ namespace Sistema.Services
                         {
                             modelo.Add(Parsear.DataClienteModel(dr));
                         }
+                        break;
+                    default:
+                        if (_baseDatos.getDataset().Tables.Count != 0 && _baseDatos.getDataset().Tables[0].Rows.Count == 1) throw new Exception(_baseDatos.getDataset().Tables[0].Rows[0].ItemArray[0].ToString());
                         break;
                 }
             }
@@ -238,8 +241,6 @@ namespace Sistema.Services
                 parametroDB.Add(new ParametroDB("@ProveedorId", data.ProveedorId, ParametroDB.SType.Int));
                 parametroDB.Add(new ParametroDB("@PrecioCosto", data.PrecioCosto, ParametroDB.SType.Decimal));
                 parametroDB.Add(new ParametroDB("@Usuario", UsuarioAudita, ParametroDB.SType.NVarChar));
-                parametroDB.Add(new ParametroDB("@Respuesta", info, ParametroDB.SType.NVarChar, ParametroDB.EParameterDirection.output));
-
 
                 respuesta = _baseDatos.executeSP("SP_MATENIMIENTO_COMPRA", parametroDB, BaseDatos.ReturnTypes.Dataset);
                 if (!respuesta) throw new Exception(_baseDatos.getMessage());
@@ -257,6 +258,9 @@ namespace Sistema.Services
                         {
                             modelo.Add(Parsear.DataCompraModel(dr));
                         }
+                        break;
+                    default:
+                        if (_baseDatos.getDataset().Tables.Count != 0 && _baseDatos.getDataset().Tables[0].Rows.Count == 1) throw new Exception(_baseDatos.getDataset().Tables[0].Rows[0].ItemArray[0].ToString());
                         break;
                 }
             }
@@ -291,8 +295,6 @@ namespace Sistema.Services
                 parametroDB.Add(new ParametroDB("@Precio", data.Precio, ParametroDB.SType.Decimal));
                 parametroDB.Add(new ParametroDB("@SubTotal", data.SubTotal, ParametroDB.SType.Decimal));
                 parametroDB.Add(new ParametroDB("@Usuario", UsuarioAudita, ParametroDB.SType.NVarChar));
-                parametroDB.Add(new ParametroDB("@Respuesta", info, ParametroDB.SType.NVarChar, ParametroDB.EParameterDirection.output));
-
 
                 respuesta = _baseDatos.executeSP("SP_MATENIMIENTO_DETALLE", parametroDB, BaseDatos.ReturnTypes.Dataset);
                 if (!respuesta) throw new Exception(_baseDatos.getMessage());
@@ -310,6 +312,9 @@ namespace Sistema.Services
                         {
                             modelo.Add(Parsear.DataDetalleModel(dr));
                         }
+                        break;
+                    default:
+                        if (_baseDatos.getDataset().Tables.Count != 0 && _baseDatos.getDataset().Tables[0].Rows.Count == 1) throw new Exception(_baseDatos.getDataset().Tables[0].Rows[0].ItemArray[0].ToString());
                         break;
                 }
             }
@@ -344,8 +349,6 @@ namespace Sistema.Services
                 parametroDB.Add(new ParametroDB("@ProductoId", data.ProductoId, ParametroDB.SType.Int));
                 parametroDB.Add(new ParametroDB("@Fecha", data.Fecha, ParametroDB.SType.DateTime));
                 parametroDB.Add(new ParametroDB("@Usuario", UsuarioAudita, ParametroDB.SType.NVarChar));
-                parametroDB.Add(new ParametroDB("@Respuesta", info, ParametroDB.SType.NVarChar, ParametroDB.EParameterDirection.output));
-
 
                 respuesta = _baseDatos.executeSP("SP_MATENIMIENTO_DEVOLUCION", parametroDB, BaseDatos.ReturnTypes.Dataset);
                 if (!respuesta) throw new Exception(_baseDatos.getMessage());
@@ -363,6 +366,9 @@ namespace Sistema.Services
                         {
                             modelo.Add(Parsear.DataDevolucionModel(dr));
                         }
+                        break;
+                    default:
+                        if (_baseDatos.getDataset().Tables.Count != 0 && _baseDatos.getDataset().Tables[0].Rows.Count == 1) throw new Exception(_baseDatos.getDataset().Tables[0].Rows[0].ItemArray[0].ToString());
                         break;
                 }
             }
@@ -397,8 +403,6 @@ namespace Sistema.Services
                 parametroDB.Add(new ParametroDB("Fecha", data.Fecha, ParametroDB.SType.DateTime));
                 parametroDB.Add(new ParametroDB("Total", data.Total, ParametroDB.SType.Decimal));
                 parametroDB.Add(new ParametroDB("@Usuario", UsuarioAudita, ParametroDB.SType.NVarChar));
-                parametroDB.Add(new ParametroDB("@Respuesta", info, ParametroDB.SType.NVarChar, ParametroDB.EParameterDirection.output));
-
 
                 respuesta = _baseDatos.executeSP("SP_MATENIMIENTO_FACTURA", parametroDB, BaseDatos.ReturnTypes.Dataset);
                 if (!respuesta) throw new Exception(_baseDatos.getMessage());
@@ -416,6 +420,9 @@ namespace Sistema.Services
                         {
                             modelo.Add(Parsear.DataFacturaModel(dr));
                         }
+                        break;
+                    default:
+                        if (_baseDatos.getDataset().Tables.Count != 0 && _baseDatos.getDataset().Tables[0].Rows.Count == 1) throw new Exception(_baseDatos.getDataset().Tables[0].Rows[0].ItemArray[0].ToString());
                         break;
                 }
             }
@@ -448,8 +455,6 @@ namespace Sistema.Services
                 parametroDB.Add(new ParametroDB("@PrecioVenta", data.PrecioVenta, ParametroDB.SType.Decimal));
                 parametroDB.Add(new ParametroDB("@Stock", data.Stock, ParametroDB.SType.Int));
                 parametroDB.Add(new ParametroDB("@Usuario", UsuarioAudita, ParametroDB.SType.NVarChar));
-                parametroDB.Add(new ParametroDB("@Respuesta", info, ParametroDB.SType.NVarChar, ParametroDB.EParameterDirection.output));
-
 
                 respuesta = _baseDatos.executeSP("SP_MATENIMIENTO_INVENTARIO", parametroDB, BaseDatos.ReturnTypes.Dataset);
                 if (!respuesta) throw new Exception(_baseDatos.getMessage());
@@ -467,6 +472,9 @@ namespace Sistema.Services
                         {
                             modelo.Add(Parsear.DataInventarioModel(dr));
                         }
+                        break;
+                    default:
+                        if (_baseDatos.getDataset().Tables.Count != 0 && _baseDatos.getDataset().Tables[0].Rows.Count == 1) throw new Exception(_baseDatos.getDataset().Tables[0].Rows[0].ItemArray[0].ToString());
                         break;
                 }
             }
@@ -499,8 +507,6 @@ namespace Sistema.Services
                 parametroDB.Add(new ParametroDB("@Nombre", data.Nombre, ParametroDB.SType.NVarChar));
                 parametroDB.Add(new ParametroDB("@Vencimiento", data.Vencimiento, ParametroDB.SType.DateTime));
                 parametroDB.Add(new ParametroDB("@Usuario", UsuarioAudita, ParametroDB.SType.NVarChar));
-                parametroDB.Add(new ParametroDB("@Respuesta", info, ParametroDB.SType.NVarChar, ParametroDB.EParameterDirection.output));
-
 
                 respuesta = _baseDatos.executeSP("SP_MATENIMIENTO_PRODUCTO", parametroDB, BaseDatos.ReturnTypes.Dataset);
                 if (!respuesta) throw new Exception(_baseDatos.getMessage());
@@ -518,6 +524,9 @@ namespace Sistema.Services
                         {
                             modelo.Add(Parsear.DataProductoModel(dr));
                         }
+                        break;
+                    default:
+                        if (_baseDatos.getDataset().Tables.Count != 0 && _baseDatos.getDataset().Tables[0].Rows.Count == 1) throw new Exception(_baseDatos.getDataset().Tables[0].Rows[0].ItemArray[0].ToString());
                         break;
                 }
             }
@@ -550,8 +559,6 @@ namespace Sistema.Services
                 parametroDB.Add(new ParametroDB("@Direccion", data.Direccion, ParametroDB.SType.NVarChar));                
                 parametroDB.Add(new ParametroDB("@Telefono", data.Telefono, ParametroDB.SType.NVarChar));
                 parametroDB.Add(new ParametroDB("@Usuario", UsuarioAudita, ParametroDB.SType.NVarChar));
-                parametroDB.Add(new ParametroDB("@Respuesta", info, ParametroDB.SType.NVarChar, ParametroDB.EParameterDirection.output));
-
 
                 respuesta = _baseDatos.executeSP("SP_MATENIMIENTO_PROVEEDOR", parametroDB, BaseDatos.ReturnTypes.Dataset);
                 if (!respuesta) throw new Exception(_baseDatos.getMessage());
@@ -569,6 +576,9 @@ namespace Sistema.Services
                         {
                             modelo.Add(Parsear.DataProveedorModel(dr));
                         }
+                        break;
+                    default:
+                        if (_baseDatos.getDataset().Tables.Count != 0 && _baseDatos.getDataset().Tables[0].Rows.Count == 1) throw new Exception(_baseDatos.getDataset().Tables[0].Rows[0].ItemArray[0].ToString());
                         break;
                 }
             }

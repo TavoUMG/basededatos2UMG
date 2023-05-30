@@ -14,37 +14,36 @@ CREATE PROCEDURE SP_MATENIMIENTO_FACTURA
 	@Direccion			NVARCHAR(250) =NULL,
 	@Fecha				DATETIME = NULL,
 	@Total				DECIMAL(20,2),
-	@Usuario			NVARCHAR(150),
-	@Respuesta			NVARCHAR(MAX) = NULL OUTPUT
+	@Usuario			NVARCHAR(150)
 AS
 BEGIN
 	BEGIN TRY
 		BEGIN TRAN TRAN_MATENIMIENTO_FACTURA
 
-		IF (@Opcion = 1) --Opción para devolver el listado completo
+		IF (@Opcion = 1) --Opciï¿½n para devolver el listado completo
 		BEGIN
 			SELECT * FROM FACTURA;
 		END
 		
-		IF (@Opcion = 2) --Opción para crear
+		IF (@Opcion = 2) --Opciï¿½n para crear
 		BEGIN
 			INSERT INTO FACTURA ([ClienteId], [CUI_NIT], [Direccion], [Fecha], [Total], [AuditUsuarioCreacion]) 
 			VALUES (@ClienteId	, @Cui_Nit, @Direccion, @Fecha, @Total, @Usuario);
 		END
 		
-		IF (@Opcion = 3) --Opción para actualizar
+		IF (@Opcion = 3) --Opciï¿½n para actualizar
 		BEGIN
 			UPDATE FACTURA SET [ClienteId]=@ClienteId, [CUI_NIT]=@Cui_Nit, [Direccion]=@Direccion, [Fecha]=@Fecha, [Total]=@Total,
 			 [AuditUsuarioModificacion] = @Usuario
 			WHERE [Id] = @Id;
 		END
 		
-		IF (@Opcion = 4) --Opción para eliminar
+		IF (@Opcion = 4) --Opciï¿½n para eliminar
 		BEGIN
 			DELETE FROM FACTURA WHERE [Id] = @Id; 
 		END
 
-		IF (@Opcion = 5) --Opción para seleccionar uno por ID
+		IF (@Opcion = 5) --Opciï¿½n para seleccionar uno por ID
 		BEGIN
 			SELECT * FROM FACTURA WHERE [Id] = @Id;
 		END
@@ -53,7 +52,7 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRAN TRAN_MATENIMIENTO_FACTURA
-		SET @Respuesta = ERROR_MESSAGE()
+		SELECT ERROR_MESSAGE();
 	END CATCH
 END
 GO

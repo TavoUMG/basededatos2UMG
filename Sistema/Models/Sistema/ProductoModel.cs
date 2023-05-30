@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Sistema.Class;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sistema.Models.Sistema
 {
@@ -20,7 +21,7 @@ namespace Sistema.Models.Sistema
         public string Nombre { get; set; } = "";
 
         [DataType(DataType.DateTime)]
-        public DateTime Vencimiento { get; set; }
+        public DateTime Vencimiento { get; set; } = ClassUtilidad.fechaSistema();
 
 
         public AuditoriaModel Auditoria = new AuditoriaModel();

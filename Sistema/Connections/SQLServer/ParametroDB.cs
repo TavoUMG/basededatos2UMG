@@ -60,7 +60,7 @@ namespace Sistema.Connections.SQLServer
                     Direction = ParameterDirection.Input;
                     break;
                 case EParameterDirection.output:
-                    Direction = ParameterDirection.InputOutput;
+                    Direction = ParameterDirection.Output;
                     break;
             }
 

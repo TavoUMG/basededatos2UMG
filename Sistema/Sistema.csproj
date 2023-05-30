@@ -23,11 +23,6 @@
     <Folder Include="Components\" />
     <Folder Include="Handler\" />
     <Folder Include="Views\Caja\" />
-    <Folder Include="Views\Cliente\" />
-    <Folder Include="Views\Categoria\" />
-    <Folder Include="Views\Inventario\" />
-    <Folder Include="Views\Producto\" />
-    <Folder Include="Views\Proveedor\" />
     <Folder Include="wwwroot\EmailTemplates\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>

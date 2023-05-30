@@ -12,37 +12,36 @@ CREATE PROCEDURE SP_MATENIMIENTO_PROVEEDOR
 	@Nombre				NVARCHAR(75) = NULL,
 	@Direccion			NVARCHAR(75)= NULL,
 	@Telefono			NVARCHAR(25) = NULL,	
-	@Usuario			NVARCHAR(150),
-	@Respuesta			NVARCHAR(MAX) = NULL OUTPUT
+	@Usuario			NVARCHAR(150)
 AS
 BEGIN
 	BEGIN TRY
 		BEGIN TRAN TRAN_MATENIMIENTO_PROVEEDOR
 
-		IF (@Opcion = 1) --Opción para devolver el listado completo
+		IF (@Opcion = 1) --Opciï¿½n para devolver el listado completo
 		BEGIN
 			SELECT * FROM PROVEEDOR;
 		END
 		
-		IF (@Opcion = 2) --Opción para crear
+		IF (@Opcion = 2) --Opciï¿½n para crear
 		BEGIN
 			INSERT INTO PROVEEDOR ([Nombre],[Direccion], [Telefono], [AuditUsuarioCreacion]) 
 			VALUES (@Nombre, @Direccion, @Telefono, @Usuario);
 		END
 		
-		IF (@Opcion = 3) --Opción para actualizar
+		IF (@Opcion = 3) --Opciï¿½n para actualizar
 		BEGIN
 			UPDATE PROVEEDOR SET [Nombre] = @Nombre, [Direccion] = @Direccion,
 			 [Telefono] = @Telefono, [AuditUsuarioModificacion] = @Usuario
 			WHERE [Id] = @Id;
 		END
 		
-		IF (@Opcion = 4) --Opción para eliminar
+		IF (@Opcion = 4) --Opciï¿½n para eliminar
 		BEGIN
 			DELETE FROM PROVEEDOR WHERE [Id] = @Id; 
 		END
 
-		IF (@Opcion = 5) --Opción para devolver el listado completo
+		IF (@Opcion = 5) --Opciï¿½n para devolver el listado completo
 		BEGIN
 			SELECT * FROM PROVEEDOR WHERE [Id] = @Id;
 		END
@@ -51,7 +50,7 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRAN TRAN_MATENIMIENTO_PROVEEDOR
-		SET @Respuesta = ERROR_MESSAGE()
+		SELECT ERROR_MESSAGE();
 	END CATCH
 END
 GO

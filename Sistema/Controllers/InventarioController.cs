@@ -65,7 +65,7 @@ namespace Sistema.Controllers
                 (respuesta, mensaje, _form.lista) = _service.ServiceInventario(Models.Sistema.OptionInventario.TODOS, new Models.Sistema.InventarioModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
 
-                return PartialView(viewName: _dataTable, model: form);
+                return PartialView(viewName: _dataTable, model: _form);
             }
             catch (Exception ex)
             {
@@ -94,7 +94,7 @@ namespace Sistema.Controllers
                 (respuesta, mensaje, _form.lista) = _service.ServiceInventario(Models.Sistema.OptionInventario.TODOS, new Models.Sistema.InventarioModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
 
-                return PartialView(viewName: _dataTable, model: form);
+                return PartialView(viewName: _dataTable, model: _form);
             }
             catch (Exception ex)
             {
