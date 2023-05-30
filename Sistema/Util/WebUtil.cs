@@ -18,12 +18,13 @@ namespace Sistema.Util
             context.Response.Cookies.Append("SiteToken", seg.EncryptData(value), cookieOptions);
         }
 
-        public static (string, int?) GetServiceValues(ISession session)
+        public static (string CUI, string NombreCompleto, int ID) GetServiceValues(ISession session)
         {
             string token = session.GetString("userToken");
-            int? idLogin = session.GetString("userId") != null ? int.Parse(session.GetString("userId")) : null;
+            string nombre = session.GetString("userName");
+            int idLogin = ClassUtilidad.parseMultiple(session.GetString("userId"), ClassUtilidad.TipoDato.Integer).numero;
 
-            return (token, idLogin);
+            return (token, nombre, idLogin);
         }
 
         public static void SendEmail(string to, string name, string subject, string body, string password)

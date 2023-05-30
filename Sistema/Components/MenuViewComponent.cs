@@ -24,9 +24,41 @@ namespace Sistema.Components
                 //Usuario
                 item = new MENUITEM() { controller = "Usuario", action = "Index", name = "Usuarios", icon = "fa-solid fa-circle" };
                 menu.items.Add(item);
-                item = new MENUITEM() { controller = "Usuario", action = "Insertar", name = "Usuario Insertar", icon = "fa-solid fa-circle" };
+
+                //Cliente
+                item = new MENUITEM() { controller = "Cliente", action = "Index", name = "Clientes", icon = "fa-solid fa-circle" };
                 menu.items.Add(item);
-                item = new MENUITEM() { controller = "Usuario", action = "Actualizar", name = "Usuario Actualizar", icon = "fa-solid fa-circle" };
+
+                //Proveedor
+                item = new MENUITEM() { controller = "Proveedor", action = "Index", name = "Proveedores", icon = "fa-solid fa-circle" };
+                menu.items.Add(item);
+
+                //Catálogo
+                item = new MENUITEM() { controller = "Catalogo", action = "Index", name = "Catálogos", icon = "fa-solid fa-circle" };
+                menu.items.Add(item);
+
+                //Producto
+                item = new MENUITEM() { controller = "Producto", action = "Index", name = "Productos", icon = "fa-solid fa-circle" };
+                menu.items.Add(item);
+
+                //Caja
+                item = new MENUITEM() { controller = "Caja", action = "Index", name = "Cajas", icon = "fa-solid fa-circle" };
+                menu.items.Add(item);
+
+                //Inventario
+                item = new MENUITEM() { controller = "Inventario", action = "Index", name = "Inventarios", icon = "fa-solid fa-circle" };
+                menu.items.Add(item);
+
+                //Compra
+                item = new MENUITEM() { controller = "Compra", action = "Index", name = "Compras", icon = "fa-solid fa-circle" };
+                menu.items.Add(item);
+
+                //Venta
+                item = new MENUITEM() { controller = "Venta", action = "Index", name = "Ventas", icon = "fa-solid fa-circle" };
+                menu.items.Add(item);
+
+                //Devolución
+                item = new MENUITEM() { controller = "Devolucion", action = "Index", name = "Devoluciones", icon = "fa-solid fa-circle" };
                 menu.items.Add(item);
 
                 item = new MENUITEM() { controller = "Home", action = "Logout", name = "Salir", icon = "fa-solid fa-door-open"};

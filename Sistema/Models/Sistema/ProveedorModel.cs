@@ -21,7 +21,6 @@ namespace Sistema.Models.Sistema
         [StringLength(75, MinimumLength = 10, ErrorMessage = "La Dirección debe de contener como mínimo 10 y un máximo de 75 caracteres")]
         public string? Direccion { get; set; } = "";
 
-
         [StringLength(25, MinimumLength = 13, ErrorMessage = "El Telefono debe de contener como mínimo 13 y un máximo de 25 caracteres")]
         public string? Telefono { get; set; } = "";
         

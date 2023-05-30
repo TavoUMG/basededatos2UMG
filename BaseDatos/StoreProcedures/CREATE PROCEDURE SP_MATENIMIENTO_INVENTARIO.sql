@@ -47,6 +47,11 @@ BEGIN
 			SELECT * FROM INVENTARIO WHERE [Id] = @Id;
 		END
 
+		IF (@Opcion = 6) --Opci�n para seleccionar uno por ProductoId
+		BEGIN
+			SELECT * FROM INVENTARIO WHERE [ProductoId] = @ProductoId;
+		END
+
 		COMMIT TRAN TRAN_MATENIMIENTO_INVENTARIO
 	END TRY
 	BEGIN CATCH

@@ -198,6 +198,7 @@ namespace Sistema.Util
                     AuditUsuarioModificacion = dr.ItemArray[7].ToString(),
                 },
                 Producto = servicio.ServiceProducto(OptionProducto.SELECCIONAR_ID, new ProductoModel { Id = ClassUtilidad.parseMultiple(dr.ItemArray[1].ToString(), ClassUtilidad.TipoDato.Integer).numero }).modelo[0],
+                Activo = ClassUtilidad.parseMultiple(dr.ItemArray[3].ToString(), ClassUtilidad.TipoDato.Integer).numero > 0
             };
         }
 

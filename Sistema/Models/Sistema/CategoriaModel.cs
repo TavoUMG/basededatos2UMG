@@ -13,7 +13,6 @@ namespace Sistema.Models.Sistema
     } 
     public class CategoriaModel
     {
-        
         public int Id { get; set; } = 0;
 
         [Required(ErrorMessage = "El Nombre es obligatorio")]

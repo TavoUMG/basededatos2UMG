@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sistema.Models.Sistema;
+using Sistema.Models.Formulario;
 using Sistema.Services;
 using static Sistema.Models.View.ModelSweetAlert;
+using Sistema.Util;
 
 namespace Sistema.Controllers
 {
@@ -9,17 +11,18 @@ namespace Sistema.Controllers
     public class UsuarioController : NotificadorController
     {
         private readonly ILogger<UsuarioController> _logger;
-        private readonly IWebHostEnvironment _hostingEnvironment;
         protected const string _controller = "UsuarioController";
+        protected const string _dataTable = "DataTable/_UsuarioTable";
         private ServiceSQLServer _service;
         private String _usuario;
+        private UsuarioForm _form;
 
-        public UsuarioController(ILogger<UsuarioController> logger, IWebHostEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
+        public UsuarioController(ILogger<UsuarioController> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
-            _hostingEnvironment = hostingEnvironment;
             _service = new ServiceSQLServer();
-            _usuario = httpContextAccessor.HttpContext.Session.GetString("userName");
+            _usuario = WebUtil.GetServiceValues(httpContextAccessor.HttpContext.Session).NombreCompleto;
+            _form = new UsuarioForm();
         }
 
         // GET: Usuario/Index
@@ -28,11 +31,10 @@ namespace Sistema.Controllers
         {
             try
             {
-                List<UsuarioModel> data = new List<UsuarioModel> { new UsuarioModel { Id = 0} };
-                (bool respuesta, string mensaje, data) = _service.ServiceUsuario(OptionUsuario.TODOS, data[0], _usuario);
+                (bool respuesta, string mensaje, _form.lista) = _service.ServiceUsuario(OptionUsuario.TODOS, new UsuarioModel {  }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
 
-                return Ok(data);
+                return View(viewName: "Index", model: _form);
             }
             catch (Exception ex)
             {
@@ -42,160 +44,100 @@ namespace Sistema.Controllers
             }
         }
 
-        // GET: Usuario/Insertar
-        [HttpGet("Insertar")]
-        public ActionResult Insertar()
+        // POST: Usuario/Insertar
+        [HttpPost("Insertar")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Insertar(UsuarioForm form)
         {
             try
             {
-                DateTime fecha = DateTime.Now;
-                List<UsuarioModel> data = new List<UsuarioModel> 
-                {   
-                    new UsuarioModel { 
-                        Id = 0,
-                        CUI = $"{fecha.ToString("dd/MM/yyyy/HH/ss").Replace("/","")}",
-                        Nombre = "Héctor",
-                        Apellido = "de la Cruz",
-                        Password = "Admin123"
-                    }
+                UsuarioModel model = new UsuarioModel
+                {
+                    Id = form.Id,
+                    CUI = form.CUI,
+                    Nombre = form.Nombre,
+                    Apellido = form.Apellido,
+                    Password = form.Password
                 };
 
-                (bool respuesta, string mensaje, data) = _service.ServiceUsuario(OptionUsuario.CREAR, data[0], _usuario);
+                (bool respuesta, string mensaje, _form.lista) = _service.ServiceUsuario(OptionUsuario.CREAR, model, _usuario);
+                if (!respuesta) throw new Exception(mensaje);
+                (respuesta, mensaje, _form.lista) = _service.ServiceUsuario(OptionUsuario.TODOS, new UsuarioModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
 
-                return RedirectToAction(actionName: "Index", controllerName: "Usuario");
+                return PartialView(viewName: _dataTable, model: _form);
             }
             catch (Exception ex)
             {
                 _logger.LogWarning(exception: ex, message: $"{_controller}  - Insertar");
-                AlertSuperior($"Ha ocurrido un error al cargar la pantalla: {ex.Message}", NotificationType.error);
-                return RedirectToAction($"Index", "Home");
+                return BadRequest(new { error = $"Ocurrio un error al guardar el usuario: {ex.Message}" });
             }
         }
 
-        // GET: Usuario/Actualizar
-        [HttpGet("Actualizar")]
-        public ActionResult Actualizar()
+        // POST: Usuario/Actualizar
+        [HttpPost("Actualizar")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Actualizar(UsuarioForm form)
         {
             try
             {
-                DateTime fecha = DateTime.Now;
-                List<UsuarioModel> data = new List<UsuarioModel>
+                UsuarioModel model = new UsuarioModel
                 {
-                    new UsuarioModel {
-                        Id = 2,
-                        CUI = $"{fecha.ToString("dd/MM/yyyy/HH/ss").Replace("/","")}",
-                        Nombre = "Héctor",
-                        Apellido = "de la Cruz",
-                        Password = "Admin123"
-                    }
+                    Id = form.Id,
+                    CUI = form.CUI,
+                    Nombre = form.Nombre,
+                    Apellido = form.Apellido,
+                    Password = form.Password
                 };
 
-                (bool respuesta, string mensaje, data) = _service.ServiceUsuario(OptionUsuario.EDITAR, data[0], _usuario);
+                (bool respuesta, string mensaje, _form.lista) = _service.ServiceUsuario(OptionUsuario.EDITAR, model, _usuario);
+                if (!respuesta) throw new Exception(mensaje);
+                (respuesta, mensaje, _form.lista) = _service.ServiceUsuario(OptionUsuario.TODOS, new UsuarioModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
 
-                return RedirectToAction(actionName: "Index", controllerName: "Usuario");
+                return PartialView(viewName: _dataTable, model: _form);
             }
             catch (Exception ex)
             {
                 _logger.LogWarning(exception: ex, message: $"{_controller}  - Actualizar");
-                AlertSuperior($"Ha ocurrido un error al cargar la pantalla: {ex.Message}", NotificationType.error);
-                return RedirectToAction($"Index", "Home");
+                return BadRequest(new { error = $"Ocurrio un error al guardar el usuario: {ex.Message}" });
             }
         }
 
-        // GET: Usuario/Eliminar
-        [HttpGet("Eliminar/{id}")]
-        public ActionResult Eliminar(int id)
+        // POST: Usuario/Eliminar
+        [HttpPost("Eliminar")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Eliminar(int Id)
         {
             try
             {
-                List<UsuarioModel> data = new List<UsuarioModel>
-                {
-                    new UsuarioModel {
-                        Id = id
-                    }
-                };
-
-                (bool respuesta, string mensaje, data) = _service.ServiceUsuario(OptionUsuario.ELIMINAR, data[0], _usuario);
+                (bool respuesta, string mensaje, _form.lista) = _service.ServiceUsuario(OptionUsuario.ELIMINAR, new UsuarioModel { Id = Id }, _usuario);
+                if (!respuesta) throw new Exception(mensaje);
+                (respuesta, mensaje, _form.lista) = _service.ServiceUsuario(OptionUsuario.TODOS, new UsuarioModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
 
-                return RedirectToAction(actionName: "Index", controllerName: "Usuario");
+                return PartialView(viewName: _dataTable, model: _form);
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(exception: ex, message: $"{_controller}  - Actualizar");
-                AlertSuperior($"Ha ocurrido un error al cargar la pantalla: {ex.Message}", NotificationType.error);
-                return RedirectToAction($"Index", "Home");
+                _logger.LogWarning(exception: ex, message: $"{_controller}  - Eliminar");
+                return BadRequest(new { error = $"Ocurrio un error al eliminar el usuario: {ex.Message}" });
             }
         }
 
-        // GET: Usuario/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
-        // GET: UsuarioController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UsuarioController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [HttpPost("Exists")]
+        public IActionResult Exists(string CUI)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                (bool respuesta, string mensaje, _form.lista) = _service.ServiceUsuario(OptionUsuario.SELECCIONAR, new UsuarioModel { CUI = CUI }, _usuario);
+
+                return Json(data: _form.lista.Count == 0);
             }
             catch
             {
-                return View();
-            }
-        }
-
-        // GET: UsuarioController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: UsuarioController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UsuarioController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UsuarioController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
+                return Json(data: false);
             }
         }
     }

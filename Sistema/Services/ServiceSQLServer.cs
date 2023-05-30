@@ -94,8 +94,8 @@ namespace Sistema.Services
                 info = String.IsNullOrEmpty(info) ? $"No pudimos realizar el proceso seleccionado." : info;
 
                 switch (option) { 
-             
-                    case OptionCaja.TODOS: 
+                    case OptionCaja.TODOS:
+                    case OptionCaja.CAJA_ABIERTA:
                     case OptionCaja.SELECCIONAR_ID:
                         if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
@@ -457,9 +457,9 @@ namespace Sistema.Services
 
                 switch (option)
                 {
-
                     case OptionInventario.TODOS:
                     case OptionInventario.SELECCIONAR_ID:
+                    case OptionInventario.PRODUCTO_ID:
                         if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
