@@ -49,27 +49,24 @@ namespace Sistema.Connections.MySQL
             {
                 if (Environment.GetEnvironmentVariable("CONEXION_STRING") == null)
                 {
-                    if (String.IsNullOrEmpty(Environment.GetEnvironmentVariable("CONEXION_STRING")))
+                    // Equivalent connection string:
+                    // "Uid=<DB_USER>;Pwd=<DB_PASS>;Host=<INSTANCE_HOST>;Database=<DB_NAME>;"
+                    var connectionString = new MySqlConnectionStringBuilder()
                     {
-                        // Equivalent connection string:
-                        // "Uid=<DB_USER>;Pwd=<DB_PASS>;Host=<INSTANCE_HOST>;Database=<DB_NAME>;"
-                        var connectionString = new MySqlConnectionStringBuilder()
-                        {
-                            // Note: Saving credentials in environment variables is convenient, but not
-                            // secure - consider a more secure solution such as
-                            // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
-                            // keep secrets safe.
-                            Server = Environment.GetEnvironmentVariable("DB_HOST"),
-                            UserID = Environment.GetEnvironmentVariable("DB_USER"),
-                            Password = Environment.GetEnvironmentVariable("DB_PASS"),
-                            Database = Environment.GetEnvironmentVariable("DB_NAME"),
-                            SslMode = MySqlSslMode.Disabled,
-                        };
-                        connectionString.Pooling = true;
+                        // Note: Saving credentials in environment variables is convenient, but not
+                        // secure - consider a more secure solution such as
+                        // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
+                        // keep secrets safe.
+                        Server = Environment.GetEnvironmentVariable("DB_HOST"),
+                        UserID = Environment.GetEnvironmentVariable("DB_USER"),
+                        Password = Environment.GetEnvironmentVariable("DB_PASS"),
+                        Database = Environment.GetEnvironmentVariable("DB_NAME"),
+                        SslMode = MySqlSslMode.Disabled,
+                    };
+                    connectionString.Pooling = true;
 
-                        // Specify additional properties here.
-                        defaultConnection = connectionString.ConnectionString;
-                    }
+                    // Specify additional properties here.
+                    defaultConnection = connectionString.ConnectionString;
                 }
 
                 if (string.IsNullOrEmpty(defaultConnection))

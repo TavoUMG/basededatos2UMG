@@ -75,6 +75,7 @@ namespace Sistema.Class
                             "d-M-yyyy",
                             "dd-MM-yyyy",
                             "dd-MM-yyyy HH:mm:ss",
+                            "dd-MM-yyyy H:mm:ss",
                             "HH:mm:ss",
                             "MM-dd-yyyy HH:mm:ss",
                             "yyyy-MM-ddTHH:mm:sszzzz",

@@ -50,7 +50,7 @@ namespace Sistema.Connections.SQLServer
         {
             try
             {
-                if (String.IsNullOrEmpty(Environment.GetEnvironmentVariable("CONEXION_STRING")))
+                if (Environment.GetEnvironmentVariable("CONEXION_STRING") == null)
                 {
                     // Equivalent connection string:
                     // "User Id=<DB_USER>;Password=<DB_PASS>;Server=<INSTANCE_HOST>;Database=<DB_NAME>;"
