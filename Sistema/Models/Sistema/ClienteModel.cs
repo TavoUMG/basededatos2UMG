@@ -29,7 +29,7 @@ namespace Sistema.Models.Sistema
         
         [StringLength(500, MinimumLength = 10, ErrorMessage = "La Dirección debe de contener como mínimo 10 y un máximo de 500 caracteres")]
         public string? Direccion { get; set; } = "";
-
+        public string NombreCompleto { get; internal set; }
 
         public AuditoriaModel Auditoria = new AuditoriaModel();
 

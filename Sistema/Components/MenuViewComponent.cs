@@ -1,5 +1,4 @@
 ﻿using Sistema.Models.View;
-using Sistema.Util;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Sistema.Components
@@ -42,7 +41,7 @@ namespace Sistema.Components
                 menu.items.Add(item);
 
                 //Caja
-                item = new MENUITEM() { controller = "Caja", action = "Index", name = "Cajas", icon = "fa-solid fa-circle" };
+                item = new MENUITEM() { controller = "Caja", action = "Index", name = "Cajas", icon = "fa-solid fa-cash-register" };
                 menu.items.Add(item);
 
                 //Inventario
@@ -50,15 +49,19 @@ namespace Sistema.Components
                 menu.items.Add(item);
 
                 //Compra
-                item = new MENUITEM() { controller = "Compra", action = "Index", name = "Compras", icon = "fa-solid fa-circle" };
+                item = new MENUITEM() { controller = "Compra", action = "Index", name = "Compras", icon = "fa-solid fa-plus" };
                 menu.items.Add(item);
 
                 //Venta
-                item = new MENUITEM() { controller = "Venta", action = "Index", name = "Ventas", icon = "fa-solid fa-circle" };
+                item = new MENUITEM() { controller = "Venta", action = "Index", name = "Ventas", icon = "fa-solid fa-minus" };
+                menu.items.Add(item);
+
+                //Facturar
+                item = new MENUITEM() { controller = "Factura", action = "Index", name = "Facturar", icon = "fa-solid fa-file-invoice" };
                 menu.items.Add(item);
 
                 //Devolución
-                item = new MENUITEM() { controller = "Devolucion", action = "Index", name = "Devoluciones", icon = "fa-solid fa-circle" };
+                item = new MENUITEM() { controller = "Devolucion", action = "Index", name = "Devoluciones", icon = "fa-solid fa-person-walking-arrow-loop-left" };
                 menu.items.Add(item);
 
                 item = new MENUITEM() { controller = "Home", action = "Logout", name = "Salir", icon = "fa-solid fa-door-open"};

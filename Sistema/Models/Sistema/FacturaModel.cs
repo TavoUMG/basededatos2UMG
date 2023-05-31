@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Sistema.Class;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sistema.Models.Sistema
 {
@@ -23,11 +24,11 @@ namespace Sistema.Models.Sistema
         public string? Direccion { get; set; } = "";
 
         [DataType(DataType.DateTime)]
-        public DateTime Fecha { get; set; }
+        public DateTime Fecha { get; set; } = ClassUtilidad.fechaSistema().Date;
 
         [Required(ErrorMessage = "El Total es obligatorio")]
-        [DataType(DataType.Currency)]
         public decimal Total { get; set; }
+
 
         public AuditoriaModel Auditoria = new AuditoriaModel();
 

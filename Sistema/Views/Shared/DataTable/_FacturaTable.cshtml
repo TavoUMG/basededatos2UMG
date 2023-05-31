@@ -1,0 +1,56 @@
+﻿@model Sistema.Models.Formulario.FacturaForm
+
+<table id="DataTableDetalle" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="text-align: center; vertical-align: middle;">Cantidad</th>
+            <th style="text-align: center; vertical-align: middle;">Producto</th>
+            <th style="text-align: center; vertical-align: middle;">Precio Q</th>
+            <th style="text-align: center; vertical-align: middle;">Sub Total Q</th>
+            <th style="text-align: center; vertical-align: middle;">Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Detalle.Count; i++)
+        {
+            <tr>
+                <td style="text-align: center; vertical-align: middle;">
+                    @Html.DisplayFor(m => m.Detalle[i].Cantidad)
+                </td>
+                <td style="text-align: left; vertical-align: middle;">
+                    @Html.DisplayFor(m => m.Detalle[i].Producto)
+                </td>
+                <td style="text-align: right; vertical-align: middle;">
+                    @Html.DisplayFor(m => m.Detalle[i].Precio)
+                </td>
+                <td style="text-align: right; vertical-align: middle;">
+                    @Html.DisplayFor(m => m.Detalle[i].SubTotal)
+                </td>
+                <td style="text-align: center; vertical-align: middle;">
+                    <input asp-for="Detalle[i].Cantidad" class="form-control form-control-sm" type="hidden" data-val="false"/>
+                    <input asp-for="Detalle[i].Producto" class="form-control form-control-sm" type="hidden" data-val="false"/>
+                    <input asp-for="Detalle[i].ProductoId" class="form-control form-control-sm" type="hidden" data-val="false"/>
+                    <input asp-for="Detalle[i].Precio" class="form-control form-control-sm" type="hidden" data-val="false"/>
+                    <input asp-for="Detalle[i].SubTotal" class="form-control form-control-sm" type="hidden" data-val="false"/>
+                    <input class="btn btn-danger " type="button" value="Quitar" onclick="removeItem(this)"/>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    /*$(document).ready(function () {
+        $('#DataTableDetalle').DataTable({
+          "paging": true,
+          "lengthChange": true,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": true,
+          "responsive": true,
+          lengthMenu: [10, @Model.lista.Count],
+          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#DataTable_wrapper .col-md-6:eq(0)');
+    });*/
+</script>

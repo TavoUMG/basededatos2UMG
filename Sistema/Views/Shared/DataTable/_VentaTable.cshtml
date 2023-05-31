@@ -1,0 +1,87 @@
+﻿@model Sistema.Models.Formulario.FacturaForm
+
+<table id="DataTableFactura" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="text-align: center; vertical-align: middle;">ID</th>
+            <th style="text-align: center; vertical-align: middle;">Cliente</th>
+            <th style="text-align: center; vertical-align: middle;">Factura</th>
+            <th style="text-align: center; vertical-align: middle;">Detalle</th>
+            <th style="text-align: center; vertical-align: middle;">Total Q</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.lista.Count; i++)
+        {
+            <tr>
+                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Id)</td>
+                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Cliente.Nombre) @Html.DisplayFor(m => m.lista[i].Cliente.Apellido)</td>
+                <td style="text-align: left; vertical-align: middle;">
+                    <dl>
+                        <dt>Fecha</dt>
+                        <dd>@Html.DisplayFor(m => m.lista[i].Fecha)</dd>
+                        <dt>CUI/NIT</dt>
+                        <dd>@Html.DisplayFor(m => m.lista[i].CUI_NIT)</dd>
+                        <dt>Dirección</dt>
+                        <dd>@Html.DisplayFor(m => m.lista[i].Direccion)</dd>
+                    </dl>
+                </td>     
+                <td style="text-align: center; vertical-align: middle;">
+                    <div id="accordion_@Model.lista[i].Id">
+                        <div class="card card-success">
+                            <div class="card-header">
+                                <h4 class="card-title w-100">
+                                    <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseDetail_@Model.lista[i].Id" aria-expanded="false">
+                                        Información Factura #@Html.DisplayFor(m => m.lista[i].Id)
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseDetail_@Model.lista[i].Id" class="collapse" data-parent="#accordion_@Model.lista[i].Id" style="">
+                                <div class="card-body">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: center; vertical-align: middle;">Cantidad</th>
+                                                <th style="text-align: center; vertical-align: middle;">Producto</th>
+                                                <th style="text-align: center; vertical-align: middle;">Precio Q</th>
+                                                <th style="text-align: center; vertical-align: middle;">Sub Total Q</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int j = 0; j < Model.lista[i].Detalle.Count; j++)
+                                            {
+                                                <tr>
+                                                    <td style="text-align: center; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Detalle[j].Cantidad)</td>
+                                                    <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Detalle[j].Producto.Nombre)</td>
+                                                    <td style="text-align: right; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Detalle[j].Precio)</td>
+                                                    <td style="text-align: right; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Detalle[j].SubTotal)</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>    
+                <td style="text-align: center; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Total)</td>                
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#DataTableFactura').DataTable({
+          "paging": true,
+          "lengthChange": true,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": true,
+          "responsive": true,
+          lengthMenu: [10, @Model.lista.Count],
+          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#DataTable_wrapper .col-md-6:eq(0)');
+    });
+</script>

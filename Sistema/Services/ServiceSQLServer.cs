@@ -45,7 +45,7 @@ namespace Sistema.Services
                     case OptionUsuario.SELECCIONAR:
                     case OptionUsuario.INICIO_SESION:
                     case OptionUsuario.SELECCIONAR_ID:
-                        if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
+                        if (_baseDatos.getDataset().Tables.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
                         foreach (DataRow dr in dt.Rows)
@@ -96,7 +96,7 @@ namespace Sistema.Services
                     case OptionCaja.TODOS:
                     case OptionCaja.CAJA_ABIERTA:
                     case OptionCaja.SELECCIONAR_ID:
-                        if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
+                        if (_baseDatos.getDataset().Tables.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
                         foreach (DataRow dr in dt.Rows)
@@ -145,7 +145,7 @@ namespace Sistema.Services
                 {
                     case OptionCategoria.TODOS:
                     case OptionCategoria.SELECCIONAR_ID:
-                        if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
+                        if (_baseDatos.getDataset().Tables.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
                         foreach (DataRow dr in dt.Rows)
@@ -198,7 +198,7 @@ namespace Sistema.Services
 
                     case OptionCliente.TODOS:
                     case OptionCliente.SELECCIONAR_ID:
-                        if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
+                        if (_baseDatos.getDataset().Tables.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
                         foreach (DataRow dr in dt.Rows)
@@ -251,7 +251,7 @@ namespace Sistema.Services
 
                     case OptionCompra.TODOS:
                     case OptionCompra.SELECCIONAR_ID:
-                        if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
+                        if (_baseDatos.getDataset().Tables.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
                         foreach (DataRow dr in dt.Rows)
@@ -305,7 +305,8 @@ namespace Sistema.Services
 
                     case OptionDetalle.TODOS:
                     case OptionDetalle.SELECCIONAR_ID:
-                        if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
+                    case OptionDetalle.SELECCIONAR_FACTURA:
+                        if (_baseDatos.getDataset().Tables.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
                         foreach (DataRow dr in dt.Rows)
@@ -359,7 +360,7 @@ namespace Sistema.Services
 
                     case OptionDevolucion.TODOS:
                     case OptionDevolucion.SELECCIONAR_ID:
-                        if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
+                        if (_baseDatos.getDataset().Tables.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
                         foreach (DataRow dr in dt.Rows)
@@ -413,7 +414,7 @@ namespace Sistema.Services
 
                     case OptionFactura.TODOS:
                     case OptionFactura.SELECCIONAR_ID:
-                        if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
+                        if (_baseDatos.getDataset().Tables.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
                         foreach (DataRow dr in dt.Rows)
@@ -439,7 +440,7 @@ namespace Sistema.Services
             return (respuesta, mensaje, modelo);
         }
 
-        public (bool respuesta, string mensaje, List<InventarioModel> modelo) ServiceInventario(OptionInventario option, InventarioModel data, String UsuarioAudita = "Sistema")
+        public (bool respuesta, string mensaje, List<InventarioModel> modelo) ServiceInventario(OptionInventario option, InventarioModel data, String UsuarioAudita = "Sistema", bool excluirInactivo = false)
         {
             (bool respuesta, string mensaje, List<InventarioModel> modelo) = (false, "", new List<InventarioModel>());
             _baseDatos = new BaseDatos(_conexion);
@@ -465,12 +466,22 @@ namespace Sistema.Services
                     case OptionInventario.TODOS:
                     case OptionInventario.SELECCIONAR_ID:
                     case OptionInventario.PRODUCTO_ID:
-                        if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
+                        if (_baseDatos.getDataset().Tables.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
                         foreach (DataRow dr in dt.Rows)
                         {
-                            modelo.Add(Parsear.DataInventarioModel(dr));
+                            if (excluirInactivo)
+                            {
+                                if(ClassUtilidad.parseMultiple(dr.ItemArray[3].ToString(), ClassUtilidad.TipoDato.Integer).numero > 0)
+                                {
+                                    modelo.Add(Parsear.DataInventarioModel(dr));
+                                }
+                            }
+                            else
+                            {
+                                modelo.Add(Parsear.DataInventarioModel(dr));
+                            }
                         }
                         break;
                     default:
@@ -517,7 +528,7 @@ namespace Sistema.Services
 
                     case OptionProducto.TODOS:
                     case OptionProducto.SELECCIONAR_ID:
-                        if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
+                        if (_baseDatos.getDataset().Tables.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
                         foreach (DataRow dr in dt.Rows)
@@ -569,7 +580,7 @@ namespace Sistema.Services
 
                     case OptionProveedor.TODOS:
                     case OptionProveedor.SELECCIONAR_ID:
-                        if (_baseDatos.getDataset().Tables.Count == 0 || _baseDatos.getDataset().Tables[0].Rows.Count == 0) throw new Exception(info);
+                        if (_baseDatos.getDataset().Tables.Count == 0) throw new Exception(info);
                         DataTable dt = _baseDatos.getDataset().Tables[0];
 
                         foreach (DataRow dr in dt.Rows)

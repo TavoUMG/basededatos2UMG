@@ -48,6 +48,11 @@ BEGIN
 			SELECT * FROM DETALLE WHERE [Id] = @Id;
 		END
 
+		IF (@Opcion = 6) --Opci�n para seleccionar todos los detalles de una FacturaId
+		BEGIN
+			SELECT * FROM DETALLE WHERE [FacturaId] = @FacturaId;
+		END
+
 		COMMIT TRAN TRAN_MATENIMIENTO_DETALLE
 	END TRY
 	BEGIN CATCH

@@ -1,0 +1,370 @@
+﻿@model Sistema.Models.Formulario.FacturaForm
+
+@{
+    ViewData["Title"] = "CREAR FACTURA";
+    Layout = "_Layout";
+    string divTableId = "divDataTableFactura";
+    string partialViewName = "DataTable/_FacturaTable";
+}
+
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">@ViewData["Title"]</h1>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- Main row -->
+        <div class="row">
+            <div class="col-md-12">
+<form id="form" asp-action="Insertar" asp-controller="Factura" Method="POST">
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">@ViewData["Title"]</h3>
+                    </div>
+                    <div class="card-body">
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-3">
+        <div class="form-group">
+            <label asp-for="Fecha"><span class="text-danger">*</span>Fecha y Hora</label>
+            <input asp-for="Fecha" type="date" class="form-control form-control-sm"/>
+            @Html.ValidationMessageFor(Model => Model.Fecha)
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-3">
+        <div class="form-group">
+            <label asp-for="CUI_NIT"><span class="text-danger">*</span>CUI/NIT</label>
+            <input asp-for="CUI_NIT" type="text" class="form-control form-control-sm" onkeypress="ValidaSoloNumeros(event)"/>
+            @Html.ValidationMessageFor(Model => Model.CUI_NIT)
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-9">
+        <div class="form-group">
+            <label asp-for="ClienteId"><span class="text-danger">*</span>Cliente</label>
+            <select asp-for="ClienteId" class="form-control select2" data-val="false" asp-items="@(new SelectList(Model.clientes,"Id","NombreCompleto",Model.ClienteId))">
+                <option value="0">Seleccion uno por favor</option>
+            </select>
+            @Html.ValidationMessageFor(Model => Model.ClienteId)
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-3">
+        <div class="form-group">
+            <label asp-for="Direccion">Dirección</label>
+            <textarea asp-for="Direccion" type="text" class="form-control form-control-sm" rows="2" ></textarea>
+            @Html.ValidationMessageFor(Model => Model.Direccion)
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <hr />
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-3">
+        <div class="form-group">
+            <label asp-for="Cantidad"><span class="text-danger">*</span>Cantidad</label>
+            <input asp-for="Cantidad" type="text" class="form-control form-control-sm" onkeypress="ValidaSoloNumeros(event)"/>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-7">
+        <div class="form-group">
+            <label asp-for="ProductoId"><span class="text-danger">*</span>Producto</label>
+            <select asp-for="ProductoId" class="form-control select2" data-val="false" asp-items="@(new SelectList(Model.productos,"ValorSelect","ValorFlied",Model.ClienteId))">
+                <option value="0">Seleccion uno por favor</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-2">
+        <br />
+        <input class="btn btn-success" type="button" id="btnAddItem" value="Agregar"/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <hr />
+    </div>
+    <div class="col-md-12 mb-3" id="@divTableId">
+        @await Html.PartialAsync(partialViewName: partialViewName, model: Model)
+    </div>
+</div>
+                    </div> 
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 text-center">
+                                <button class="btn btn-primary btn-block" type="button" id="btnSubmit">Guardar</button>
+                            </div>
+                        </div>
+                    </div> 
+                </div>  
+</form>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div><!--/. container-fluid -->
+</section>
+<!-- /.content -->
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script type="text/javascript">
+    var _div  = "#"+'@divTableId';
+
+    $(document).ready(function () {
+        $('.select2').select2();
+    });
+    
+
+    $("body").on("click", "#btnAddItem", function () {
+        try
+        {
+            var Cantidad = $("#Cantidad").val();
+
+            if (Cantidad == null || Cantidad == "" || Cantidad < 1) {
+                Swal.fire({icon:'error', title: '¡Error!', text: "Debe de ingresar la cantidad de producto y debe ser mayor a 0" });
+                return;
+            }
+
+            var ProductoId = $("#ProductoId option:selected").val();
+            var Producto = $("#ProductoId option:selected").text();
+            var ProductoIdValue = ProductoId.split("|");
+
+            if (ProductoId == null || ProductoId == "" || ProductoIdValue.length != 3) {
+                Swal.fire({icon:'error', title: '¡Error!', text: "Debe de seleccionar un producto válido" });
+                return;
+            }
+
+            if (Cantidad > parseInt(ProductoIdValue[1])) {
+                Swal.fire({icon:'info', title: '¡Validación!', text: `La Cantidad ${Cantidad} no debe de ser mayor a ${ProductoIdValue[1]}` });
+                return;
+            }
+
+            var SubTotal = Cantidad * parseFloat(ProductoIdValue[2]);
+            var count = GetCount("DataTableDetalle");
+
+            //Se obtiene el cuerpo y la fila de la tabla
+            var tBody = $("#DataTableDetalle > TBODY")[0];
+            var row = tBody.insertRow(-1);
+
+            //Se crean las celdas de datos
+            var cell;
+            cell = AddCell(row, Cantidad);
+            cell = AddCell(row, Producto);
+            cell = AddCell(row, ProductoIdValue[2]);
+            cell = AddCell(row, SubTotal);
+
+            //Se crea la celda del boton
+            cell = $(row.insertCell(-1));
+            cell.attr("style", "text-align: center; vertical-align: middle;");
+
+            var btnRemove = CreateRemoveButton("removeItem");
+            var hiddenFieldCantidad = CreateHiddenField("Detalle", "Cantidad", Cantidad, count);
+            var hiddenFieldProducto = CreateHiddenField("Detalle", "Producto", Producto, count);
+            var hiddenFieldProductoId = CreateHiddenField("Detalle", "ProductoId", parseInt(ProductoIdValue[0]), count);
+            var hiddenFieldPrecio = CreateHiddenField("Detalle", "Precio", parseFloat(ProductoIdValue[2]), count);
+            var hiddenFieldSubTotal = CreateHiddenField("Detalle", "SubTotal", SubTotal, count);
+
+            cell.append(hiddenFieldCantidad);
+            cell.append(hiddenFieldProducto);
+            cell.append(hiddenFieldProductoId);
+            cell.append(hiddenFieldPrecio);
+            cell.append(hiddenFieldSubTotal);
+            cell.append(btnRemove);
+
+            //Limpiar campos
+            $("#Cantidad").val("");
+            $("#ProductoId").val(0).change();
+
+            Swal.fire({icon:'success', title: '¡Agregado!', text: `El producto ${Producto} fue agreado al detalle.` });
+        }
+        catch (e)
+        {
+            Swal.fire({icon:'warning', title: '¡Error!', text: e.message });
+        }
+    });
+
+
+    function removeItem(button) {
+        //Determine the reference of the Row using the Button.
+        var row = $(button).closest("TR");
+        var name = $("TD", row).eq(0).html();
+
+        //Get the reference of the Table.
+        var table = $("#DataTableDetalle")[0];
+
+        //Delete the Table row using it's Index.
+        table.deleteRow(row[0].rowIndex);
+
+        var count = 0;
+
+        //Fix the ids and names
+        $("#DataTableDetalle TBODY TR").each(function () {
+            var row = $(this);
+            var Cantidad = row.find("input").eq(0);
+            var Producto = row.find("input").eq(1);
+            var ProductoId = row.find("input").eq(2);
+            var Precio = row.find("input").eq(3);
+            var SubTotal = row.find("input").eq(4);
+
+            Cantidad = FixNamesId(Cantidad, "Detalle", "Cantidad", count);
+            Producto = FixNamesId(Producto, "Detalle", "Producto", count);
+            ProductoId = FixNamesId(ProductoId, "Detalle", "ProductoId", count);
+            Precio = FixNamesId(Precio, "Detalle", "Precio", count);
+            SubTotal = FixNamesId(SubTotal, "Detalle", "SubTotal", count);
+            count++;
+        });
+    };
+
+
+    $('#btnSubmit').on('click', function (evt) {
+        evt.preventDefault();
+
+        let validacionActiva = $('#form').valid();
+        let timerInterval
+        if(validacionActiva && GetCount("DataTableDetalle") > 0)
+        {
+            Swal.fire({
+                title: `¿Guardar información?`,
+                icon: 'question',
+                allowOutsideClick: () => {
+                    const popup = Swal.getPopup()
+                    popup.classList.remove('swal2-show')
+                    setTimeout(() => {
+                        popup.classList.add('animate__animated', 'animate__headShake')
+                    })
+                    setTimeout(() => {
+                        popup.classList.remove('animate__animated', 'animate__headShake')
+                    }, 500)
+                    return false
+                },  
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'SI',
+                cancelButtonText: `NO`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#form").first().submit();
+                }
+            })
+        }
+        else
+        {
+            console.log('¡Validación!')
+            Swal.fire({
+                title: '¡Validación!',
+                icon: 'error',
+                html:
+                'La ventana se cerrara en <strong></strong> segundos.<br/><br/>',
+                timer: 10000,
+                didOpen: () => {
+                const content = Swal.getHtmlContainer()
+                const $ = content.querySelector.bind(content)
+
+                Swal.showLoading()
+
+                timerInterval = setInterval(() => {
+                    Swal.getHtmlContainer().querySelector('strong')
+                    .textContent = (Swal.getTimerLeft() / 1000)
+                        .toFixed(0)
+                }, 100)
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            })
+        }
+    });
+
+    function GetCount(tablename) {
+        var count = 0;
+        $("#" + tablename+" TBODY TR").each(function () {
+            count++;
+        });
+        return count;
+    }
+
+    function AddCell(row, value)
+    {
+        var cell = $(row.insertCell(-1));
+        cell.html(value);
+        return cell;
+    }
+
+    function CreateHiddenField(listname, fieldname, value, count) {
+        var hiddenField = $("<input />");
+        hiddenField.attr("type", "hidden");
+        hiddenField.attr("id", listname + "_" + count + "__" + fieldname);
+        hiddenField.attr("name", listname + "[" + count + "]." + fieldname);
+        hiddenField.val(value);
+        return hiddenField;
+    }
+
+    function CreateRemoveButton(methodname) {
+        var btnRemove = $("<input />");
+        btnRemove.attr("type", "button");
+        btnRemove.attr("class", "btn btn-danger");
+        btnRemove.attr("onclick", methodname+"(this);");
+        btnRemove.val("Quitar");
+        return btnRemove;
+    }
+
+    function FixNamesId(field, listname, fieldname, count) {
+        field.attr("id", listname + "_" + count + "__" + fieldname);
+        field.attr("name", listname + "[" + count + "]." + fieldname);
+        return field;
+    }
+
+    function Check(tablename, value, index) {
+        var checkResult = true;
+
+        if (value == null) {
+            checkResult = false;
+        }
+        else if (value == "") {
+            checkResult = false;
+        }
+        else {
+            $("#" + tablename + " TBODY TR").each(function () {
+                var row = $(this);
+                var idData = row.find("input").eq(index);
+
+                if (value == idData.val())
+                    checkResult = false;
+            });
+        }
+        return checkResult;
+    }
+
+
+    function ValidaSoloNumerosPunto(e) {
+        var charCode = (e.which) ? e.which : e.keyCode
+        if ((charCode < 46) || (charCode > 57) && (charCode = 47))
+            e.returnValue = false;
+    }
+
+    function ValidaSoloNumeros(e) {
+        var charCode = (e.which) ? e.which : e.keyCode
+        if ((charCode < 47) || (charCode > 57) && (charCode = 47))
+            e.returnValue = false;
+    }
+</script>

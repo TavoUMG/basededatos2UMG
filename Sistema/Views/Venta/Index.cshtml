@@ -1,0 +1,82 @@
+﻿@model Sistema.Models.Formulario.FacturaForm
+
+@{
+    ViewData["Title"] = "ADMINISTRAR VENTAS";
+    Layout = "_Layout";
+    string divTableId = "divDataTableVenta";
+    string partialViewName = "DataTable/_VentaTable";
+}
+
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">@ViewData["Title"]</h1>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- Main row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">@ViewData["Title"]</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+<div class="col-md-12 mb-3" id="@divTableId">
+@await Html.PartialAsync(partialViewName: partialViewName, model: Model)
+</div>
+                        </div>
+                    </div>   
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div><!--/. container-fluid -->
+</section>
+<!-- /.content -->
+
+<script type="text/javascript">
+    var _div  = "#"+'@divTableId';
+    
+	function errorDialog(e) {
+        if(e.status == 400) {
+            Swal.fire({
+                title: '¡Error!',
+                icon: 'error',
+                html:
+                `<span>${e.responseJSON.error}</span> <br/><br/> La ventana se cerrara en <strong></strong> segundos.<br/><br/>`,
+                timer: 10000,
+                didOpen: () => {
+                    const content = Swal.getHtmlContainer()
+                    const $ = content.querySelector.bind(content)
+
+                    Swal.showLoading()
+
+                    timerInterval = setInterval(() => {
+                            Swal.getHtmlContainer().querySelector('strong')
+                            .textContent = (Swal.getTimerLeft() / 1000)
+                                .toFixed(0)
+                        }, 100)
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            })
+        } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Ocurrio un error en el servidor'
+            })
+        }
+	}
+</script>

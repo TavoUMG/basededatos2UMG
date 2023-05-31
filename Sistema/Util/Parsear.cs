@@ -84,6 +84,7 @@ namespace Sistema.Util
                     AuditFechaModificacion = String.IsNullOrEmpty(dr.ItemArray[7].ToString()) ? null : ClassUtilidad.parseMultiple(dr.ItemArray[7].ToString(), ClassUtilidad.TipoDato.DateTime).fechahora.ToString("dd/MM/yyyy HH:mm:ss"),
                     AuditUsuarioModificacion = dr.ItemArray[8].ToString(),
                 },
+                NombreCompleto = $"{dr.ItemArray[1].ToString()} {dr.ItemArray[2].ToString()}"
             };
         }
 
@@ -160,7 +161,6 @@ namespace Sistema.Util
 
         public static FacturaModel DataFacturaModel(DataRow dr)
         {
-            //ClassUtilidad.parseMultiple(dr.ItemArray[0].ToString(), ClassUtilidad.TipoDato.DateTime).fechahora,
             ServiceSQLServer servicio = new ServiceSQLServer();
             return new FacturaModel
             {
@@ -178,13 +178,14 @@ namespace Sistema.Util
                     AuditUsuarioModificacion = dr.ItemArray[9].ToString(),
                 },
                 Cliente = servicio.ServiceCliente(OptionCliente.SELECCIONAR_ID, new ClienteModel { Id = ClassUtilidad.parseMultiple(dr.ItemArray[1].ToString(), ClassUtilidad.TipoDato.Integer).numero }).modelo[0],
+                Detalle = servicio.ServiceDetalle(OptionDetalle.SELECCIONAR_FACTURA, new DetalleModel { FacturaId = ClassUtilidad.parseMultiple(dr.ItemArray[0].ToString(), ClassUtilidad.TipoDato.Integer).numero }).modelo
             };
         }
 
         public static InventarioModel DataInventarioModel(DataRow dr)
         {
             ServiceSQLServer servicio = new ServiceSQLServer();
-            return new InventarioModel
+            InventarioModel inventario = new InventarioModel
             {
                 Id = ClassUtilidad.parseMultiple(dr.ItemArray[0].ToString(), ClassUtilidad.TipoDato.Integer).numero,
                 ProductoId = ClassUtilidad.parseMultiple(dr.ItemArray[1].ToString(), ClassUtilidad.TipoDato.Integer).numero,
@@ -200,6 +201,11 @@ namespace Sistema.Util
                 Producto = servicio.ServiceProducto(OptionProducto.SELECCIONAR_ID, new ProductoModel { Id = ClassUtilidad.parseMultiple(dr.ItemArray[1].ToString(), ClassUtilidad.TipoDato.Integer).numero }).modelo[0],
                 Activo = ClassUtilidad.parseMultiple(dr.ItemArray[3].ToString(), ClassUtilidad.TipoDato.Integer).numero > 0
             };
+
+            inventario.ValorSelect = $"{inventario.ProductoId}|{inventario.Stock}|{inventario.PrecioVenta}";
+            inventario.ValorFlied = $"{inventario.Producto.Nombre} - Q {inventario.PrecioVenta}";
+
+            return inventario;
         }
 
         public static ProductoModel DataProductoModel(DataRow dr)

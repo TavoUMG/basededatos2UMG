@@ -22,7 +22,6 @@
   <ItemGroup>
     <Folder Include="Components\" />
     <Folder Include="Handler\" />
-    <Folder Include="Views\Caja\" />
     <Folder Include="wwwroot\EmailTemplates\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>

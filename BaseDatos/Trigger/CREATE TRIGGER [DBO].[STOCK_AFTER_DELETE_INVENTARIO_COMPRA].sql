@@ -17,7 +17,7 @@ BEGIN
     -- Insert statements for trigger here
 	UPDATE [DBO].[INVENTARIO]
 	SET [Stock] = [Stock] - (SELECT D.Cantidad FROM deleted AS D),
-	[AuditUsuarioModificacion] = (SELECT I.AuditUsuarioModificacion FROM Inserted AS I)
-	WHERE ProductoId = (SELECT I.ProductoId FROM Inserted AS I);
+	[AuditUsuarioModificacion] = (SELECT D.AuditUsuarioModificacion FROM deleted AS D)
+	WHERE ProductoId = (SELECT D.ProductoId FROM deleted AS D);
 END
 GO

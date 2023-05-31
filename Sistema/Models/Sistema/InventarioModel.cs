@@ -16,6 +16,8 @@
         public decimal PrecioVenta { get; set; }
         public int Stock { get; set; } = 0;
         public bool Activo { get; set; } = false;
+        public string ValorSelect { get; internal set; }
+        public string ValorFlied { get; internal set; }
 
         public AuditoriaModel Auditoria = new AuditoriaModel();
 

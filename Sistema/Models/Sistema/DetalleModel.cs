@@ -8,7 +8,8 @@ namespace Sistema.Models.Sistema
         CREAR = 2,
         EDITAR = 3,
         ELIMINAR = 4,
-        SELECCIONAR_ID = 5
+        SELECCIONAR_ID = 5,
+        SELECCIONAR_FACTURA = 6
     }
     public class DetalleModel
     {
@@ -18,11 +19,9 @@ namespace Sistema.Models.Sistema
         public int Cantidad { get; set; } = 0;
 
         [Required(ErrorMessage = "El Precio es obligatorio")]
-        [DataType(DataType.Currency)]
         public decimal Precio { get; set; }
 
         [Required(ErrorMessage = "El Sub Total es obligatorio")]
-        [DataType(DataType.Currency)]
         public decimal SubTotal { get; set; }
 
         public AuditoriaModel Auditoria = new AuditoriaModel();

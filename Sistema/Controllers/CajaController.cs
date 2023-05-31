@@ -51,15 +51,19 @@ namespace Sistema.Controllers
         {
             try
             {
+                (bool respuesta, string mensaje, _form.lista) = _service.ServiceCaja(Models.Sistema.OptionCaja.CAJA_ABIERTA, new Models.Sistema.CajaModel { UsuarioId = _form.UsuarioId }, _usuario);
+                if (!respuesta) throw new Exception(mensaje);
+                if (_form.lista.Count > 0) throw new Exception("Este usuario ya tiene una caja abierta");
+
                 Models.Sistema.CajaModel model = new Models.Sistema.CajaModel 
                 { 
                     Id = form.Id,
-                    UsuarioId = form.UsuarioId,
+                    UsuarioId = _form.UsuarioId,
                     efectivoApertura = form.efectivoApertura,
                     efectivoCierre = form.efectivoCierre,
                 };
 
-                (bool respuesta, string mensaje, _form.lista) = _service.ServiceCaja(Models.Sistema.OptionCaja.CREAR, model, _usuario);
+                (respuesta, mensaje, _form.lista) = _service.ServiceCaja(Models.Sistema.OptionCaja.CREAR, model, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
                 (respuesta, mensaje, _form.lista) = _service.ServiceCaja(Models.Sistema.OptionCaja.TODOS, new Models.Sistema.CajaModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
@@ -83,7 +87,7 @@ namespace Sistema.Controllers
                 Models.Sistema.CajaModel model = new Models.Sistema.CajaModel
                 {
                     Id = form.Id,
-                    UsuarioId = form.UsuarioId,
+                    UsuarioId = _form.UsuarioId,
                     efectivoApertura = form.efectivoApertura,
                     efectivoCierre = form.efectivoCierre,
                 };
@@ -112,7 +116,7 @@ namespace Sistema.Controllers
                 Models.Sistema.CajaModel model = new Models.Sistema.CajaModel
                 {
                     Id = form.Id,
-                    UsuarioId = form.UsuarioId,
+                    UsuarioId = _form.UsuarioId,
                     efectivoApertura = form.efectivoApertura,
                     efectivoCierre = form.efectivoCierre,
                 };
@@ -149,22 +153,6 @@ namespace Sistema.Controllers
             {
                 _logger.LogWarning(exception: ex, message: $"{_controller}  - Eliminar");
                 return BadRequest(new { error = $"Ocurrio un error al eliminar: {ex.Message}" });
-            }
-        }
-
-        // POST: Caja/Exists
-        [HttpPost("Exists")]
-        public IActionResult Exists()
-        {
-            try
-            {
-                (bool respuesta, string mensaje, _form.lista) = _service.ServiceCaja(Models.Sistema.OptionCaja.CAJA_ABIERTA, new Models.Sistema.CajaModel { }, _usuario);
-
-                return Json(data: _form.lista.Count == 0);
-            }
-            catch
-            {
-                return Json(data: false);
             }
         }
     }

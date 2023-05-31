@@ -31,7 +31,7 @@ BEGIN
 		
 		IF (@Opcion = 3) --Opci�n para actualizar
 		BEGIN
-			UPDATE CAJA SET [UsuarioId]= @UsuarioId, [efectivoApertura] = @efectivoApertura, 
+			UPDATE CAJA SET [efectivoApertura] = @efectivoApertura, 
 			[efectivoCierre] = @efectivoCierre, [AuditUsuarioModificacion] = @Usuario
 			WHERE [Id] = @Id;
 		END

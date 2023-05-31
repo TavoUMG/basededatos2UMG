@@ -1,12 +1,12 @@
-﻿@model Sistema.Models.Formulario.ProveedorForm
+﻿@model Sistema.Models.Formulario.CajaForm
 
 @{
-    ViewData["Title"] = "ADMINISTRAR PROVEEDORS";
+    ViewData["Title"] = "ADMINISTRAR CAJAS";
     Layout = "_Layout";
-    string formId = "FormProveedor";
-    string buttonId = "btnProveedor";
-    string divTableId = "divDataTableProveedor";
-    string partialViewName = "DataTable/_ProveedorTable";
+    string formId = "FormCaja";
+    string buttonId = "btnCaja";
+    string divTableId = "divDataTableCaja";
+    string partialViewName = "DataTable/_CajaTable";
 }
 
 
@@ -40,26 +40,21 @@
         @Html.HiddenFor(m => m.Id)
 
         <div class="row">
-            <div class="col-sm-12 col-md-12">
+            <div class="col-sm-12 col-md-12 divInsert">
                 <div class="form-group">
-                    <label asp-for="Nombre"><span class="text-danger">*</span> Nombre</label>
-                    <input asp-for="Nombre" type="text" class="form-control" data-val="false" />
+                    <label asp-for="efectivoApertura"><span class="text-danger">*</span> Apertura de Caja Q</label>
+                    <input asp-for="efectivoApertura" type="text" class="form-control" data-val="false" />
                 </div>
             </div>
-            <div class="col-sm-12 col-md-12">
+            <div class="col-sm-12 col-md-12 divCierre">
                 <div class="form-group">
-                    <label asp-for="Telefono"> Teléfono</label>
-                    <input asp-for="Telefono" type="text" class="form-control" data-val="false" />
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-12">
-                <div class="form-group">
-                    <label asp-for="Direccion"> Dirección</label>
-                    <textarea asp-for="Direccion" class="form-control" data-val="false" rows="4"></textarea>
+                    <label asp-for="efectivoCierre"><span class="text-danger">*</span> Cierre de Caja Q</label>
+                    <input asp-for="efectivoCierre" type="text" class="form-control" data-val="false" />
                 </div>
             </div>
         </div>
-        <div class="row">
+
+        <div class="row divInsert">
             <div class="col-sm-12 col-md-6">
                 <br /><br />
                 <a onclick="limpiar()" class="btn btn-md btn-info">Limpiar</a>
@@ -67,6 +62,17 @@
             <div class="col-sm-12 col-md-6">
                 <br /><br />
                 <button id="@buttonId" type="submit" class="btn btn-block btn-primary">Guardar</button>
+            </div>
+        </div>
+
+        <div class="row divCierreBtn">
+            <div class="col-sm-12 col-md-6">
+                <br /><br />
+                <a onclick="limpiar()" class="btn btn-md btn-info">Limpiar</a>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <br /><br />
+                <button id="btnCierre" type="submit" class="btn btn-block btn-primary">Guardar</button>
             </div>
         </div>
     </form>
@@ -91,26 +97,21 @@
     var _title = "¡Guardar!";
 
     $(document).ready(function () {
+        $('.select2').select2();
+
         $(_form).validate({
             rules: {
-                "Nombre": { required: true , minlength: 3, maxlength: 75 },
-                "Telefono": { required: false , minlength: 8, maxlength: 8, digits: true },
-                "Direccion": { required: false , minlength: 2, maxlength: 75 },
+                "efectivoApertura": { required: true, range: [0.25, 10000] },
+                "efectivoCierre": { required: true, range: [0.25, 10000000000000000] },
             },
             messages: {
-                "Nombre": {
-                    required: "El nombre es obligatorio",
-                    minlength: "El nombre debe de tener más de 3 caracteres.",
-                    maxlength: "El nombre debe de tener menos de 75 caracteres."
+                "efectivoApertura": {
+                    required: "El efectivo de apertura es obligatorio",
+                    range: "El efectivo de apertura de tener más de 0.25 y menos de 10,000"
                 },
-                "Telefono": {
-                    minlength: "El teléfono debe de tener 8 caracteres.",
-                    maxlength: "El teléfono debe de tener 8 caracteres.",
-                    digits: "El teléfono solo acepta números"
-                },
-                "Direccion": {
-                    minlength: "El apellido debe de tener más de 2 caracteres.",
-                    maxlength: "El apellido debe de tener menos de 75 caracteres."
+                "efectivoApertura": {
+                    required: "El efectivo de cierre es obligatorio",
+                    range: "El efectivo de cierre de tener más de 0.25 y menos de 10000000000000000"
                 },
             },
             errorElement: 'span',
@@ -142,7 +143,9 @@
                 }
             }
 
-        });        
+        });  
+        
+        limpiar();
     });
 
     $(_btn).click(function (event) {
@@ -173,7 +176,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: $("#Id").val() == 0 ? '@Url.Action("Insertar", "Proveedor")' : '@Url.Action("Actualizar", "Proveedor")',
+                        url: $("#Id").val() == 0 ? '@Url.Action("Insertar", "Caja")' : '@Url.Action("Actualizar", "Caja")',
                         headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                         method:'POST',
                         data: $(_form).serialize(),
@@ -185,6 +188,65 @@
                                 position: 'top-end',
                                 icon: 'success',
                                 title: $("#Id").val() == 0 ? "El registro fue creado." : "El registro fue modificado.",
+                                showConfirmButton: false,
+                                timer: 2500
+                            })
+
+                            $(_form).get(0).reset()
+                            limpiar()
+                        },
+                        error: function(e) {
+                            errorDialog(e)
+                        },
+                        complete: function() {
+                        }
+                    });
+                }
+            })
+        }
+    });
+    
+
+    $("#btnCierre").click(function (event) {
+       if($(_form).valid())
+        {
+            event.preventDefault();
+            Swal.fire({
+                title: "¡Guaradar Cierre!",
+                text: "¿Esta seguro de realizar esta acción?",
+                icon: "success",
+                allowOutsideClick: () => {
+                    const popup = Swal.getPopup()
+                    popup.classList.remove('swal2-show')
+                    setTimeout(() => {
+                        popup.classList.add('animate__animated', 'animate__headShake')
+                    })
+                    setTimeout(() => {
+                        popup.classList.remove('animate__animated', 'animate__headShake')
+                    }, 500)
+                    return false
+                },  
+                showCancelButton: true,
+                confirmButtonColor: '#09cd27',
+                cancelButtonColor: '#e91d10',
+                confirmButtonText: 'SI',
+                cancelButtonText: `NO`,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("Cerrar", "Caja")',
+                        headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                        method:'POST',
+                        data: $(_form).serialize(),
+                        success: function (data) {
+                            $(_div).empty();
+                            $(_div).html(data);
+
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: "El registro fue creado.",
                                 showConfirmButton: false,
                                 timer: 2500
                             })
@@ -228,7 +290,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '@Url.Action("Eliminar", "Proveedor")',
+                    url: '@Url.Action("Eliminar", "Caja")',
                     method:'POST',
                     headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                     data: {
@@ -256,20 +318,33 @@
         })
     }
 
-    function actualizar(id, nombre, telefono, direccion) {
+    function actualizar(id, efectivoApertura, efectivoCierre, isCierre) {
         limpiar();
         
         $("#Id").val(id)
-        $("#Nombre").val(nombre)
-        $("#Telefono").val(telefono)
-        $("#Direccion").val(direccion)
+        if(isCierre == 0) {
+            $(".divInsert").show()
+            $(".divCierre").show()
+
+            $("#efectivoApertura").val(efectivoApertura)
+            $("#efectivoCierre").val(efectivoCierre)
+        } else {
+            $(".divInsert").hide()
+            $(".divCierre").show()
+            $(".divCierreBtn").show()
+
+            $("#efectivoCierre").val(efectivoCierre)
+        }
     }
 
     function limpiar() {
+        $(".divInsert").show()
+        $(".divCierre").hide()
+        $(".divCierreBtn").hide()
+
         $("#Id").val(0)
-        $("#Nombre").val("")
-        $("#Telefono").val("")
-        $("#Direccion").val("")
+        $("#efectivoApertura").val("")
+        $("#efectivoCierre").val("")
     }
     
 	function errorDialog(e) {

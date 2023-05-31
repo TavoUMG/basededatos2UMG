@@ -19,7 +19,6 @@ namespace Sistema.Models.Sistema
         public int ProveedorId { get; set; } = 0;
 
         [Required(ErrorMessage = "El Precio Costo es obligatoria")]
-        [DataType(DataType.Currency)]
         public decimal PrecioCosto { get; set; }
 
         public AuditoriaModel Auditoria = new AuditoriaModel();
