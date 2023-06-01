@@ -28,10 +28,14 @@ namespace Sistema.Models.Formulario
         //Sección Form Detalle
         public int? ProductoId { get; set; } = 0;
         public int? Cantidad { get; set; } = 0;
+        public bool Imprimir { get; internal set; } = false;
 
         public List<DatelleForm> Detalle { get; set; }
 
         public List<FacturaModel> lista { get; set; } = new List<FacturaModel>();
+        public string Numero { get; internal set; }
+        public string Archivo { get; internal set; }
+
         public List<ClienteModel> clientes = new List<ClienteModel>();
         public List<InventarioModel> productos = new List<InventarioModel>();
     }

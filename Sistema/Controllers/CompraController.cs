@@ -46,7 +46,7 @@ namespace Sistema.Controllers
             }
         }
 
-        // POST: Producto/Insertar
+        // POST: Compra/Insertar
         [HttpPost("Insertar")]
         [ValidateAntiForgeryToken]
         public ActionResult Insertar(CompraForm form)

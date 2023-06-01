@@ -1,3 +1,4 @@
+using IronBarCode;
 using Sistema.Class;
 using System.Net;
 using System.Net.Mail;
@@ -25,6 +26,21 @@ namespace Sistema.Util
             int idLogin = ClassUtilidad.parseMultiple(session.GetString("userId"), ClassUtilidad.TipoDato.Integer).numero;
 
             return (token, nombre, idLogin);
+        }
+
+        public static string generarQR(string webRootPath, string factura, string data)
+        {
+            string dirPath = Path.Combine(webRootPath, "QR");
+            if (!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+
+            string saveToPath = Path.Combine(dirPath, $"qr_{factura}.png");
+
+            QRCodeWriter.CreateQrCode(data, 250, QRCodeWriter.QrErrorCorrectionLevel.Medium).AddBarcodeValueTextAboveBarcode(TextSpacing: 1).SaveAsPng(saveToPath);
+
+            return saveToPath;
         }
 
         public static void SendEmail(string to, string name, string subject, string body, string password)

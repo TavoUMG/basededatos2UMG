@@ -24,6 +24,17 @@
 <section class="content">
     <div class="container-fluid">
         <!-- Main row -->
+        @if(Model.Imprimir)
+        {
+            <div class="row">
+                <div class="col-6">
+                    <a class="btn btn-lg btn-success btn-block btn-flat mb-3" href="~/Tickets/@Model.Archivo" target="_blank"><i class="fa fa-print"></i> IMPRIMIR FACTURA</a>
+                </div>
+                <div class="col-6">
+                    <a class="btn btn-lg btn-info btn-block btn-flat mb-3" asp-action="Index" asp-controller="Factura"><i class="fa fa-cart-plus"></i> CREAR NUEVA FACTURA</a>
+                </div>
+            </div>
+        }
         <div class="row">
             <div class="col-md-12">
 <form id="form" asp-action="Insertar" asp-controller="Factura" Method="POST">
@@ -33,6 +44,15 @@
                     </div>
                     <div class="card-body">
 <div class="row">
+    @if(Model.Imprimir)
+    {
+        <div class="col-12 col-sm-12 col-md-3">
+            <div class="form-group">
+                <label asp-for="Numero">Factura</label>
+                <input asp-for="Numero" type="text" class="form-control form-control-sm"/>
+            </div>
+        </div>
+    }
     <div class="col-12 col-sm-12 col-md-3">
         <div class="form-group">
             <label asp-for="Fecha"><span class="text-danger">*</span>Fecha y Hora</label>
@@ -60,12 +80,15 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-12 col-sm-12 col-md-3">
+    <div class="col-12 col-sm-12 col-md-8">
         <div class="form-group">
             <label asp-for="Direccion">Dirección</label>
             <textarea asp-for="Direccion" type="text" class="form-control form-control-sm" rows="2" ></textarea>
             @Html.ValidationMessageFor(Model => Model.Direccion)
         </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-4 text-right">
+        <p><h2>Total Q</h2> <h1><strong id="h4Total">@Model.Total</strong></h1></p>
     </div>
 </div>
 <div class="row">
@@ -74,27 +97,29 @@
     </div>
 </div>
 
-
-<div class="row">
-    <div class="col-12 col-sm-12 col-md-3">
-        <div class="form-group">
-            <label asp-for="Cantidad"><span class="text-danger">*</span>Cantidad</label>
-            <input asp-for="Cantidad" type="text" class="form-control form-control-sm" onkeypress="ValidaSoloNumeros(event)"/>
+@if(!Model.Imprimir)
+{
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-3">
+            <div class="form-group">
+                <label asp-for="Cantidad"><span class="text-danger">*</span>Cantidad</label>
+                <input asp-for="Cantidad" type="number" min="1" pattern="^[0-9]+" class="form-control form-control-sm" onkeypress="ValidaSoloNumeros(event)"/>
+            </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-7">
+            <div class="form-group">
+                <label asp-for="ProductoId"><span class="text-danger">*</span>Producto</label>
+                <select asp-for="ProductoId" class="form-control select2" data-val="false" asp-items="@(new SelectList(Model.productos,"ValorSelect","ValorFlied",Model.ClienteId))">
+                    <option value="0">Seleccion uno por favor</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-2">
+            <br />
+            <a class="btn btn-success" id="btnAddItem">Agregar</a>
         </div>
     </div>
-    <div class="col-12 col-sm-12 col-md-7">
-        <div class="form-group">
-            <label asp-for="ProductoId"><span class="text-danger">*</span>Producto</label>
-            <select asp-for="ProductoId" class="form-control select2" data-val="false" asp-items="@(new SelectList(Model.productos,"ValorSelect","ValorFlied",Model.ClienteId))">
-                <option value="0">Seleccion uno por favor</option>
-            </select>
-        </div>
-    </div>
-    <div class="col-12 col-sm-12 col-md-2">
-        <br />
-        <input class="btn btn-success" type="button" id="btnAddItem" value="Agregar"/>
-    </div>
-</div>
+}
 
 <div class="row">
     <div class="col-md-12 mb-3">
@@ -105,13 +130,16 @@
     </div>
 </div>
                     </div> 
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col-12 col-sm-12 col-md-12 text-center">
-                                <button class="btn btn-primary btn-block" type="button" id="btnSubmit">Guardar</button>
+                    @if(!Model.Imprimir)
+                    {
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-md-12 text-center">
+                                    <button class="btn btn-lg btn-primary btn-block" type="button" id="btnSubmit">Guardar</button>
+                                </div>
                             </div>
-                        </div>
-                    </div> 
+                        </div> 
+                    }
                 </div>  
 </form>
             </div>
@@ -131,6 +159,13 @@
 
     $(document).ready(function () {
         $('.select2').select2();
+
+        if('@Model.Imprimir' === 'True')
+        {
+            $('form input').prop('disabled', true);
+            $('form textarea').prop('disabled', true);
+            $('form select').prop('disabled', true);
+        }
     });
     
 
@@ -159,6 +194,8 @@
             }
 
             var SubTotal = Cantidad * parseFloat(ProductoIdValue[2]);
+            var Total = $("#h4Total").html();
+
             var count = GetCount("DataTableDetalle");
 
             //Se obtiene el cuerpo y la fila de la tabla
@@ -195,6 +232,9 @@
             $("#ProductoId").val(0).change();
 
             Swal.fire({icon:'success', title: '¡Agregado!', text: `El producto ${Producto} fue agreado al detalle.` });
+
+            $("#h4Total").empty();
+            $("#h4Total").html(parseFloat(Total) + SubTotal);
         }
         catch (e)
         {

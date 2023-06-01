@@ -23,3 +23,6 @@ dotnet_diagnostic.CS8619.severity = none
 
 # SYSLIB0021: El tipo o el miembro están obsoletos
 dotnet_diagnostic.SYSLIB0021.severity = none
+
+# CA2200: Iniciar de nuevo para preservar los detalles de la pila
+dotnet_diagnostic.CA2200.severity = none
