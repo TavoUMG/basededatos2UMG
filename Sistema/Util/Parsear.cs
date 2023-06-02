@@ -159,17 +159,17 @@ namespace Sistema.Util
             };
         }
 
-        public static FacturaModel DataFacturaModel(DataRow dr)
+        public static FacturaModel DataFacturaModel(DataRow dr, bool llenarDetalle = true)
         {
             ServiceSQLServer servicio = new ServiceSQLServer();
-            return new FacturaModel
+            FacturaModel factura = new FacturaModel
             {
                 Id = ClassUtilidad.parseMultiple(dr.ItemArray[0].ToString(), ClassUtilidad.TipoDato.Integer).numero,
                 ClienteId = ClassUtilidad.parseMultiple(dr.ItemArray[1].ToString(), ClassUtilidad.TipoDato.Integer).numero,
                 CUI_NIT = dr.ItemArray[2].ToString(),
                 Direccion = dr.ItemArray[3].ToString(),
                 Fecha = ClassUtilidad.parseMultiple(dr.ItemArray[4].ToString(), ClassUtilidad.TipoDato.DateTime).fechahora,
-                Total = ClassUtilidad.parseMultiple(dr.ItemArray[5].ToString(), ClassUtilidad.TipoDato.Decimal).flotante,                
+                Total = ClassUtilidad.parseMultiple(dr.ItemArray[5].ToString(), ClassUtilidad.TipoDato.Decimal).flotante,
                 Auditoria = new AuditoriaModel
                 {
                     AuditFechaCreacion = String.IsNullOrEmpty(dr.ItemArray[6].ToString()) ? null : ClassUtilidad.parseMultiple(dr.ItemArray[6].ToString(), ClassUtilidad.TipoDato.DateTime).fechahora.ToString("dd/MM/yyyy HH:mm:ss"),
@@ -178,8 +178,15 @@ namespace Sistema.Util
                     AuditUsuarioModificacion = dr.ItemArray[9].ToString(),
                 },
                 Cliente = servicio.ServiceCliente(OptionCliente.SELECCIONAR_ID, new ClienteModel { Id = ClassUtilidad.parseMultiple(dr.ItemArray[1].ToString(), ClassUtilidad.TipoDato.Integer).numero }).modelo[0],
-                Detalle = servicio.ServiceDetalle(OptionDetalle.SELECCIONAR_FACTURA, new DetalleModel { FacturaId = ClassUtilidad.parseMultiple(dr.ItemArray[0].ToString(), ClassUtilidad.TipoDato.Integer).numero }).modelo
+                Numero = dr.ItemArray[0].ToString().PadLeft(totalWidth: 5, paddingChar: '0')
             };
+
+            factura.Archivo = $"Ticket_{factura.Numero}.pdf";
+
+            if (llenarDetalle)
+                factura.Detalle = servicio.ServiceDetalle(OptionDetalle.SELECCIONAR_FACTURA, new DetalleModel { FacturaId = factura.Id }).modelo;
+
+            return factura;
         }
 
         public static InventarioModel DataInventarioModel(DataRow dr)

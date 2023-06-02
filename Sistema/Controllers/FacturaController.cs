@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sistema.Class;
 using Sistema.Models.Formulario;
 using Sistema.Models.Sistema;
 using Sistema.Services;
@@ -65,65 +64,20 @@ namespace Sistema.Controllers
                 List<CajaModel> cajas = _service.ServiceCaja(Models.Sistema.OptionCaja.CAJA_ABIERTA, new Models.Sistema.CajaModel { UsuarioId = _UsuarioId }, _usuario).modelo;
                 if (cajas.Count == 0) throw new Exception("Este usuario aún no a abierto una caja, vaya a la caja a crear una por favor.");
 
-
-                List<UsuarioModel> usuarios = _service.ServiceUsuario(Models.Sistema.OptionUsuario.SELECCIONAR_ID, new Models.Sistema.UsuarioModel { Id = _UsuarioId }, _usuario).modelo;
-                List<ClienteModel> clientes = _service.ServiceCliente(Models.Sistema.OptionCliente.SELECCIONAR_ID, new Models.Sistema.ClienteModel { Id = form.ClienteId }, _usuario).modelo;
-
-                form.Numero = "1".PadLeft(totalWidth: 5, paddingChar: '0');
-                form.Archivo = $"Ticket_{form.Numero}.pdf";
-
-                string dirPathImage = Path.Combine(_hostEnvironment.WebRootPath, "images");
-
-                TicketPDF ticket = new TicketPDF();
-                ticket.Path = Path.Combine(_hostEnvironment.WebRootPath, "Tickets", form.Archivo);
-                ticket.HeaderImage = Path.Combine(_hostEnvironment.WebRootPath, "images", "logo.png");
-                ticket.FooterQR = WebUtil.generarQR(_hostEnvironment.WebRootPath, form.Numero, "gracias por comprar");
-
-                ticket.AddHeaderLine("NIT: 1002827029");
-                ticket.AddHeaderLine($"FACTURA Nro.: {form.Numero}");
-                ticket.AddHeaderLine($"AUTORIZACION Nro.: {ClassUtilidad.fechaSistema().ToString("fff/ss/HH/mm/MM/yyyy").Replace("/","")}");
-
-                ticket.AddSubHeaderLine($"Fecha: {form.Fecha.ToString("dd/mm/yyyy")}");
-                ticket.AddSubHeaderLine($"NIT/CUI: {form.CUI_NIT}");
-                ticket.AddSubHeaderLine($"Cliente: {clientes[0].NombreCompleto}");
-
                 form.Total = 0;
                 for (int i = 0; i < form.Detalle.Count; i++)
                 {
-                    if(form.Detalle[i].Producto.Split("-")[0].Length > 11)
-                    {
-                        ticket.AddItem(
-                            cantidad: form.Detalle[i].Cantidad.ToString(),
-                            item: form.Detalle[i].Producto.Split("-")[0].Substring(0, 11),
-                            price: String.Format("{0:0,0.00}", form.Detalle[i].Precio),
-                            total: String.Format("{0:0,0.00}", form.Detalle[i].SubTotal)
-                        ) ;
-                    }
-                    else
-                    {
-                        ticket.AddItem(
-                            cantidad: form.Detalle[i].Cantidad.ToString(),
-                            item: form.Detalle[i].Producto.Split("-")[0],
-                            price: String.Format("{0:0,0.00}", form.Detalle[i].Precio),
-                            total: String.Format("{0:0,0.00}", form.Detalle[i].SubTotal)
-                        );
-                    }
-
                     form.Total += form.Detalle[i].SubTotal;
                 }
 
-                //El metodo AddTotal requiere 2 parametros, 
-                //la descripcion del total, y el precio 
-                ticket.AddTotal("TOTAL", String.Format("{0:0,0.00}", form.Total));
+                (bool respuesta, string mensaje, List<FacturaModel> factura, List<DetalleModel> detalle) = _service.ServiceTransactionFactura(form, _usuario);
+                if (!respuesta) throw new Exception(mensaje);
 
-                //El metodo AddFooterLine funciona igual que la cabecera 
-                ticket.AddFooterLine($"Son: {ConversoresNumeroLetras.Parse(form.Total)}");
-                ticket.AddFooterLine($"\n");
-                ticket.AddFooterLine($"Código de Control: {ClassUtilidad.GUID()}");
-                ticket.AddFooterLine($"Fecha Límite de Emisión: {form.Fecha.AddMonths(2).Date.ToString("dd/MM/yyyy")}");
+                form.Numero = factura[0].Numero;
+                form.Archivo = factura[0].Archivo;
 
                 //Generamos
-                if(ticket.Print())
+                if(WebUtil.generarPDF(_hostEnvironment.WebRootPath, factura[0], detalle))
                 {
                     _form = form;
                     CargarCatalogos(imprimir: true);

@@ -47,7 +47,7 @@ namespace Sistema.Connections.MySQL
         {
             try
             {
-                if (Environment.GetEnvironmentVariable("CONEXION_STRING") == null)
+                if (String.IsNullOrEmpty(Environment.GetEnvironmentVariable("CONEXION_STRING")))
                 {
                     // Equivalent connection string:
                     // "Uid=<DB_USER>;Pwd=<DB_PASS>;Host=<INSTANCE_HOST>;Database=<DB_NAME>;"

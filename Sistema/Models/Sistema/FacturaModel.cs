@@ -28,7 +28,8 @@ namespace Sistema.Models.Sistema
 
         [Required(ErrorMessage = "El Total es obligatorio")]
         public decimal Total { get; set; }
-
+        public string Numero { get; internal set; }
+        public string Archivo { get; internal set; }
 
         public AuditoriaModel Auditoria = new AuditoriaModel();
 

@@ -1,6 +1,6 @@
 ﻿@model Sistema.Models.Formulario.FacturaForm
 
-<table id="DataTableFactura" class="table table-bordered table-striped">
+<table id="DataTableFactura" class="table table-bordered">
     <thead>
         <tr>
             <th style="text-align: center; vertical-align: middle;">ID</th>
@@ -14,7 +14,9 @@
         @for (int i = 0; i < Model.lista.Count; i++)
         {
             <tr>
-                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Id)</td>
+                <td style="text-align: center; vertical-align: middle;">
+                    <a class="btn btn-lg btn-primary btn-flat mb-3" href="~/Tickets/@Model.lista[i].Archivo" target="_blank"><i class="fa fa-print"></i> IMPRIMIR FACTURA #@Model.lista[i].Numero</a>
+                </td>
                 <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Cliente.Nombre) @Html.DisplayFor(m => m.lista[i].Cliente.Apellido)</td>
                 <td style="text-align: left; vertical-align: middle;">
                     <dl>

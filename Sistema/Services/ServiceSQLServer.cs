@@ -1,8 +1,10 @@
 ﻿using Sistema.Class;
 using Sistema.Connections.SQLServer;
+using Sistema.Models.Formulario;
 using Sistema.Models.Sistema;
 using Sistema.Util;
 using System.Data;
+using System.Text.Json;
 
 namespace Sistema.Services
 {
@@ -604,6 +606,63 @@ namespace Sistema.Services
             }
 
             return (respuesta, mensaje, modelo);
+        }
+
+        public (bool respuesta, string mensaje, List<FacturaModel> factura, List<DetalleModel> detalle) ServiceTransactionFactura(FacturaForm data, String UsuarioAudita = "Sistema")
+        {
+            (bool respuesta, string mensaje, List<FacturaModel> factura, List<DetalleModel> detalle) = (false, "", new List<FacturaModel>(), new List<DetalleModel>());
+            _baseDatos = new BaseDatos(_conexion);
+
+            try
+            {
+                string? info = String.Empty;
+                parametroDB = new List<ParametroDB>();             
+
+                parametroDB.Add(new ParametroDB("@ClienteId", data.ClienteId, ParametroDB.SType.Int));
+                parametroDB.Add(new ParametroDB("@Cui_Nit", data.CUI_NIT, ParametroDB.SType.NVarChar));
+                parametroDB.Add(new ParametroDB("Direccion", String.IsNullOrEmpty(data.Direccion) ? "" : data.Direccion, ParametroDB.SType.NVarChar));
+                parametroDB.Add(new ParametroDB("Fecha", data.Fecha, ParametroDB.SType.DateTime));
+                parametroDB.Add(new ParametroDB("Total", data.Total, ParametroDB.SType.Decimal));
+                parametroDB.Add(new ParametroDB("Detalle", JsonSerializer.Serialize(data), ParametroDB.SType.NVarChar));
+                parametroDB.Add(new ParametroDB("@Usuario", UsuarioAudita, ParametroDB.SType.NVarChar));
+
+                respuesta = _baseDatos.executeSP("SP_TRANSACCION_FACTURA", parametroDB, BaseDatos.ReturnTypes.Dataset);
+                if (!respuesta) throw new Exception(_baseDatos.getMessage());
+                info = String.IsNullOrEmpty(info) ? $"No pudimos realizar el proceso seleccionado." : info;
+
+                if (_baseDatos.getDataset().Tables.Count == 0) throw new Exception(info);
+
+                if (_baseDatos.getDataset().Tables.Count == 2) {
+                    DataTable dt = _baseDatos.getDataset().Tables[0];
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        factura.Add(Parsear.DataFacturaModel(dr, false));
+                    }
+
+                    dt = _baseDatos.getDataset().Tables[1];
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        detalle.Add(Parsear.DataDetalleModel(dr));
+                    }
+                }
+                else
+                {
+                    throw new Exception(_baseDatos.getDataset().Tables[0].Rows[0].ItemArray[0].ToString());
+                }  
+            }
+            catch (Exception ex)
+            {
+                respuesta = false;
+                mensaje = $"TransactionFactura: {ex.Message}";
+            }
+            finally
+            {
+                _baseDatos.closeConnection();
+            }
+
+            return (respuesta, mensaje, factura, detalle);
         }
 
     }

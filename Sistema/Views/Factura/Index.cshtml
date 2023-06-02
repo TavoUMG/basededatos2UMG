@@ -183,13 +183,14 @@
             var Producto = $("#ProductoId option:selected").text();
             var ProductoIdValue = ProductoId.split("|");
 
-            if (ProductoId == null || ProductoId == "" || ProductoIdValue.length != 3) {
-                Swal.fire({icon:'error', title: '¡Error!', text: "Debe de seleccionar un producto válido" });
+            console.log(parseInt(ProductoIdValue[1]));
+            if (parseInt(ProductoIdValue[1]) < (Cantidad - 1)) {
+                Swal.fire({icon:'warning', title: '¡Stock!', text: `El producto seleccionado no tiene stock suficiente, la Cantidad ${Cantidad} debe ser igual o menor a ${ProductoIdValue[1]}.` });
                 return;
             }
 
-            if (Cantidad > parseInt(ProductoIdValue[1])) {
-                Swal.fire({icon:'info', title: '¡Validación!', text: `La Cantidad ${Cantidad} no debe de ser mayor a ${ProductoIdValue[1]}` });
+            if (ProductoId == null || ProductoId == "" || ProductoIdValue.length != 3) {
+                Swal.fire({icon:'error', title: '¡Error!', text: "Debe de seleccionar un producto válido" });
                 return;
             }
 

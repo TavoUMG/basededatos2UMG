@@ -43,6 +43,44 @@ namespace Sistema.Util
             return saveToPath;
         }
 
+        public static bool generarPDF(string _hostEnvironment, Models.Sistema.FacturaModel factura, List<Models.Sistema.DetalleModel> detalle)
+        {
+            TicketPDF ticket = new TicketPDF();
+            ticket.Path = Path.Combine(_hostEnvironment, "Tickets", factura.Archivo);
+            ticket.HeaderImage = Path.Combine(_hostEnvironment, "images", "logo.png");
+            ticket.FooterQR = WebUtil.generarQR(_hostEnvironment, factura.Numero, "gracias por comprar");
+
+            ticket.AddHeaderLine("NIT: 1002827029");
+            ticket.AddHeaderLine($"FACTURA Nro.: {factura.Numero}");
+            ticket.AddHeaderLine($"AUTORIZACION Nro.: {ClassUtilidad.fechaSistema().ToString("fff/ss/HH/mm/MM/yyyy").Replace("/", "")}");
+
+            ticket.AddSubHeaderLine($"Fecha: {factura.Fecha.ToString("dd/mm/yyyy")}");
+            ticket.AddSubHeaderLine($"NIT/CUI: {factura.CUI_NIT}");
+            ticket.AddSubHeaderLine($"Cliente: {factura.Cliente.NombreCompleto}");
+
+            for (int i = 0; i < detalle.Count; i++)
+            {
+                ticket.AddItem(
+                    cantidad: detalle[i].Cantidad.ToString(),
+                    item: detalle[i].Producto.Nombre,
+                    price: String.Format("{0:0,0.00}", detalle[i].Precio),
+                    total: String.Format("{0:0,0.00}", detalle[i].SubTotal)
+                );
+            }
+
+            //El metodo AddTotal requiere 2 parametros, 
+            //la descripcion del total, y el precio 
+            ticket.AddTotal("TOTAL", String.Format("{0:0,0.00}", factura.Total));
+
+            //El metodo AddFooterLine funciona igual que la cabecera 
+            ticket.AddFooterLine($"Son: {ConversoresNumeroLetras.Parse(factura.Total)}");
+            ticket.AddFooterLine($"\n");
+            ticket.AddFooterLine($"Código de Control: {ClassUtilidad.GUID()}");
+            ticket.AddFooterLine($"Fecha Límite de Emisión: {factura.Fecha.AddMonths(2).Date.ToString("dd/MM/yyyy")}");
+
+            return ticket.Print();
+        }
+
         public static void SendEmail(string to, string name, string subject, string body, string password)
         {
             try
