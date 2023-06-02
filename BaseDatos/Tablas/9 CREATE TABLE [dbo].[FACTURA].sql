@@ -3,10 +3,13 @@ BEGIN
 	CREATE TABLE [dbo].[FACTURA](
 		[Id] [decimal](18, 0) IDENTITY(1,1) NOT NULL,	
 		[ClienteId] [decimal](18, 0) NOT NULL,		
-		[CUI_NIT] [nvarchar](15) NULL,		
+		[CUI_NIT] [nvarchar](15) NOT NULL,		
 		[Direccion] [nvarchar](250) NULL,	
 		[Fecha] [datetime] NOT NULL,
-		[Total] [decimal](20, 2) NOT NULL,						
+		[Total] [decimal](20, 2) NOT NULL,	
+		[CajaId] [decimal](18, 0) NOT NULL,		
+		[Pagado] [bit] NOT NULL,	
+		[TipoPago] [nvarchar](25) NOT NULL,	
 	 CONSTRAINT [PK_FACTURA] PRIMARY KEY CLUSTERED	
 	(
 		[Id] DESC
@@ -15,6 +18,12 @@ BEGIN
 	
 	ALTER TABLE [dbo].[FACTURA]  WITH CHECK ADD  CONSTRAINT [FK_FACTURA_ClienteId] FOREIGN KEY([ClienteId])
 	REFERENCES [dbo].[CLIENTE] ([Id])
+	ALTER TABLE [dbo].[FACTURA]  WITH CHECK ADD  CONSTRAINT [FK_FACTURA_CajaId] FOREIGN KEY([CajaId])
+	REFERENCES [dbo].[CAJA] ([Id])
+
+	ALTER TABLE [dbo].[FACTURA] ADD CONSTRAINT [DF_FACTURA_Pagado]  DEFAULT ((0)) FOR [Pagado]
+	ALTER TABLE [dbo].[FACTURA] ADD CONSTRAINT [DF_FACTURA_TipoPago]  DEFAULT (('FALTA COBRO')) FOR [TipoPago]
+	ALTER TABLE [dbo].[FACTURA] ADD CONSTRAINT [CHECK_FACTURA_TipoPago] CHECK([TipoPago] IN('CONTADO', 'TARJETA', 'CREDITO', 'PUNTOS', 'FALTA COBRO'))
 
 	PRINT N'CREATE TABLE [dbo].[FACTURA]'
 END

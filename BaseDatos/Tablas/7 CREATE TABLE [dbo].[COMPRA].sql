@@ -6,6 +6,7 @@ BEGIN
 		[ProductoId] [decimal](18, 0) NOT NULL,		
 		[ProveedorId] [decimal](18, 0) NOT NULL,	
 		[PrecioCosto] [decimal](20, 2) NOT NULL,
+		[CajaId] [decimal](18, 0) NOT NULL,
 	 CONSTRAINT [PK_COMPRA] PRIMARY KEY CLUSTERED	
 	(
 		[Id] DESC
@@ -16,6 +17,8 @@ BEGIN
 	REFERENCES [dbo].[PRODUCTO] ([Id])
 	ALTER TABLE [dbo].[COMPRA]  WITH CHECK ADD  CONSTRAINT [FK_COMPRA_ProveedorId] FOREIGN KEY([ProveedorId])
 	REFERENCES [dbo].[PROVEEDOR] ([Id])
+	ALTER TABLE [dbo].[COMPRA]  WITH CHECK ADD  CONSTRAINT [FK_COMPRA_CajaId] FOREIGN KEY([CajaId])
+	REFERENCES [dbo].[CAJA] ([Id])
 
 	PRINT N'CREATE TABLE [dbo].[COMPRA]'
 END

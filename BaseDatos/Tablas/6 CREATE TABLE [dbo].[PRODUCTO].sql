@@ -4,7 +4,8 @@ BEGIN
 		[Id] [decimal](18, 0) IDENTITY(1,1) NOT NULL,	
 		[CategoriaId] [decimal](18, 0) NOT NULL,
 		[Nombre] [nvarchar](75) NOT NULL,	
-		[Vencimiento] [datetime] NULL,			
+		[Vencimiento] [datetime] NULL,	
+		[Imagen] [nvarchar](250) NULL,			
 	 CONSTRAINT [PK_PRODUCTO] PRIMARY KEY CLUSTERED	
 	(
 		[Id] DESC

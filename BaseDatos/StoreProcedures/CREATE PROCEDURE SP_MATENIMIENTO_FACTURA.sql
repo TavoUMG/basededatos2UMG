@@ -11,9 +11,10 @@ CREATE PROCEDURE SP_MATENIMIENTO_FACTURA
 	@Id					INT = 0,
 	@ClienteId			INT,
 	@Cui_Nit			NVARCHAR(15) = NULL,
-	@Direccion			NVARCHAR(250) =NULL,
+	@Direccion			NVARCHAR(250) = NULL,
 	@Fecha				DATETIME = NULL,
 	@Total				DECIMAL(20,2),
+	@CajaId				INT = 0,
 	@Usuario			NVARCHAR(150)
 AS
 BEGIN
@@ -27,14 +28,14 @@ BEGIN
 		
 		IF (@Opcion = 2) --Opci�n para crear
 		BEGIN
-			INSERT INTO FACTURA ([ClienteId], [CUI_NIT], [Direccion], [Fecha], [Total], [AuditUsuarioCreacion]) 
-			VALUES (@ClienteId	, @Cui_Nit, @Direccion, @Fecha, @Total, @Usuario);
+			INSERT INTO FACTURA ([ClienteId], [CUI_NIT], [Direccion], [Fecha], [Total], [CajaId], [AuditUsuarioCreacion]) 
+			VALUES (@ClienteId	, @Cui_Nit, @Direccion, @Fecha, @Total, @CajaId, @Usuario);
 		END
 		
 		IF (@Opcion = 3) --Opci�n para actualizar
 		BEGIN
 			UPDATE FACTURA SET [ClienteId]=@ClienteId, [CUI_NIT]=@Cui_Nit, [Direccion]=@Direccion, [Fecha]=@Fecha, [Total]=@Total,
-			 [AuditUsuarioModificacion] = @Usuario
+			 [CajaId] = @CajaId, [AuditUsuarioModificacion] = @Usuario
 			WHERE [Id] = @Id;
 		END
 		

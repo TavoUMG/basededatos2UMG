@@ -13,6 +13,7 @@ CREATE PROCEDURE SP_MATENIMIENTO_COMPRA
 	@ProductoId			INT,
 	@ProveedorId		INT,
 	@PrecioCosto		DECIMAL(20,2),	
+	@CajaId				INT = 0,
 	@Usuario			NVARCHAR(150)
 AS
 BEGIN
@@ -26,14 +27,14 @@ BEGIN
 		
 		IF (@Opcion = 2) --Opci�n para crear
 		BEGIN
-			INSERT INTO COMPRA([Cantidad], [ProductoId],[ProveedorId], [PrecioCosto], [AuditUsuarioCreacion] ) 
-			VALUES (@Cantidad, @ProductoId, @ProveedorId, @PrecioCosto, @Usuario);
+			INSERT INTO COMPRA([Cantidad], [ProductoId],[ProveedorId], [PrecioCosto], [CajaId], [AuditUsuarioCreacion] ) 
+			VALUES (@Cantidad, @ProductoId, @ProveedorId, @PrecioCosto, @CajaId, @Usuario);
 		END
 		
 		IF (@Opcion = 3) --Opci�n para actualizar
 		BEGIN
 			UPDATE COMPRA SET [Cantidad]=@Cantidad, [ProductoId]=@ProductoId, [ProveedorId]=@ProveedorId, 
-			[PrecioCosto]=@PrecioCosto, [AuditUsuarioCreacion]=@Usuario
+			[PrecioCosto]=@PrecioCosto, [CajaId] = @CajaId, [AuditUsuarioCreacion]=@Usuario
 			WHERE [Id] = @Id;
 		END
 		
