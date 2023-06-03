@@ -60,8 +60,20 @@ namespace Sistema.Components
                 item = new MENUITEM() { controller = "Factura", action = "Index", name = "Facturar", icon = "fa-solid fa-file-invoice" };
                 menu.items.Add(item);
 
+                //Cobro
+                item = new MENUITEM() { controller = "Cobro", action = "Index", name = "Cobros", icon = "fa-solid fa-money-bill" };
+                menu.items.Add(item);
+
                 //Devolución
-                item = new MENUITEM() { controller = "Devolucion", action = "Index", name = "Devoluciones", icon = "fa-solid fa-person-walking-arrow-loop-left" };
+                /*item = new MENUITEM() { controller = "Devolucion", action = "Index", name = "Devoluciones", icon = "fa-solid fa-person-walking-arrow-loop-left" };
+                menu.items.Add(item);*/
+
+                //Promocion
+                item = new MENUITEM() { controller = "Promocion", action = "Index", name = "Promociones", icon = "fa-solid fa-tags" };
+                menu.items.Add(item);
+
+                //Reporte
+                item = new MENUITEM() { controller = "Reporte", action = "Index", name = "Reportes", icon = "fa-solid fa-report" };
                 menu.items.Add(item);
 
                 item = new MENUITEM() { controller = "Home", action = "Logout", name = "Salir", icon = "fa-solid fa-door-open"};

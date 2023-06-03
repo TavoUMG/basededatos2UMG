@@ -35,7 +35,7 @@
                     <div class="card-body">
                         <div class="row">
 <div class="col-md-4">
-    <form id="@formId" method="POST" autocomplete="off">
+    <form id="@formId" method="POST" autocomplete="off" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)
 
@@ -46,6 +46,15 @@
                     <select asp-for="CategoriaId" class="form-control select2" data-val="false" asp-items="@(new SelectList(Model.categorias,"Id","Nombre",Model.CategoriaId))">
                         <option value="0">Seleccion uno por favor</option>
                     </select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12">
+                <div class="form-group">
+                    <label asp-for="Imagen"><span class="text-danger">*</span> Imagen</label>
+                    <div class="custom-file">
+                        <input asp-for="Imagen" type="file" class="custom-file-input" data-val="false">
+                        <label asp-for="Imagen" class="custom-file-label"></label>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-12 col-md-12">
@@ -94,10 +103,12 @@
 
     $(document).ready(function () {
         $('.select2').select2();
+        bsCustomFileInput.init();
 
         $(_form).validate({
             rules: {
                 "CategoriaId": { required: true , number: true, min: 1 },
+                "Imagen": { required: false , accept: "image/jpg, image/jpeg, image/png" },
                 "Nombre": { required: true , minlength: 3, maxlength: 75 },
                 "Vencimiento": { required: true, date: true },
             },
@@ -106,6 +117,9 @@
                     required: "La categoría es obligatoria",
                     number: "La categoría solo acepta números",
                     min: "La categoría debe ser mayor a 0"
+                },
+                "Imagen": {
+                    accept: "Solo se aceptan imagenes [jpg, jpeg, png]"
                 },
                 "Nombre": {
                     required: "El nombre es obligatorio",
@@ -176,11 +190,16 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
+                    var form = $(_form)[0];
+                    var formData = new FormData(form);
+
                     $.ajax({
                         url: $("#Id").val() == 0 ? '@Url.Action("Insertar", "Producto")' : '@Url.Action("Actualizar", "Producto")',
                         headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
                         method:'POST',
-                        data: $(_form).serialize(),
+                        data: new FormData(this.form),
+                        processData: false,
+                        contentType: false,
                         success: function (data) {
                             $(_div).empty();
                             $(_div).html(data);

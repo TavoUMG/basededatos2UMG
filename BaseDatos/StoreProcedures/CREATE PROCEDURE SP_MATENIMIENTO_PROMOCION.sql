@@ -9,10 +9,10 @@ GO
 CREATE PROCEDURE SP_MATENIMIENTO_PROMOCION
 	@Opcion				INT,
 	@Id					INT = 0,
-	@Descripcion		NVARCHAR(MAX),
+	@Descripcion		NVARCHAR(MAX) NULL,
 	@ProductoId			INT = 0,
 	@TipoPromocionId	INT = 0,
-	@ProductosId		NVARCHAR(MAX),
+	@ProductosId		NVARCHAR(MAX) NULL,
 	@Usuario			NVARCHAR(150)
 AS
 BEGIN

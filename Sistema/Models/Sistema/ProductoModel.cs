@@ -23,6 +23,7 @@ namespace Sistema.Models.Sistema
         [DataType(DataType.DateTime)]
         public DateTime Vencimiento { get; set; } = ClassUtilidad.fechaSistema();
 
+        public string Imagen { get; set; } = "";
 
         public AuditoriaModel Auditoria = new AuditoriaModel();
 

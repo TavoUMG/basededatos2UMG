@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Sistema.Filters;
 using Sistema.Models.Formulario;
 using Sistema.Services;
 using Sistema.Util;
@@ -7,6 +8,7 @@ using static Sistema.Models.View.ModelSweetAlert;
 namespace Sistema.Controllers
 {
     [Route("[controller]")]
+    [RequestAuthenticationFilter]
     public class VentaController : NotificadorController
     {
         private readonly ILogger<VentaController> _logger;

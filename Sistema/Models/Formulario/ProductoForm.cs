@@ -9,6 +9,7 @@ namespace Sistema.Models.Formulario
         public int CategoriaId { get; set; } = 0;
         public string Nombre { get; set; } = "";
         public DateTime Vencimiento { get; set; } = ClassUtilidad.fechaSistema().Date;
+        public IFormFile Imagen { get; set; }
 
         public List<ProductoModel> lista = new List<ProductoModel>();
         public List<CategoriaModel> categorias = new List<CategoriaModel>();

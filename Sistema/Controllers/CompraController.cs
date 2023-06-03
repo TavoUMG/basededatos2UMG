@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Sistema.Filters;
 using Sistema.Models.Formulario;
 using Sistema.Services;
 using Sistema.Util;
@@ -7,6 +8,7 @@ using static Sistema.Models.View.ModelSweetAlert;
 namespace Sistema.Controllers
 {
     [Route("[controller]")]
+    [RequestAuthenticationFilter]
     public class CompraController : NotificadorController
     {
         private readonly ILogger<CompraController> _logger;
@@ -15,6 +17,7 @@ namespace Sistema.Controllers
         private ServiceSQLServer _service;
         private String _usuario;
         private CompraForm _form;
+        private int _UsuarioId;
 
         public CompraController(ILogger<CompraController> logger, IHttpContextAccessor httpContextAccessor)
         {
@@ -22,6 +25,7 @@ namespace Sistema.Controllers
             _service = new ServiceSQLServer();
             _usuario = WebUtil.GetServiceValues(httpContextAccessor.HttpContext.Session).NombreCompleto;
             _form = new CompraForm();
+            _UsuarioId = WebUtil.GetServiceValues(httpContextAccessor.HttpContext.Session).ID;
         }
 
         // GET: Compra/Index
@@ -30,6 +34,13 @@ namespace Sistema.Controllers
         {
             try
             {
+                List<Models.Sistema.CajaModel> cajas = _service.ServiceCaja(Models.Sistema.OptionCaja.CAJA_ABIERTA, new Models.Sistema.CajaModel { UsuarioId = _UsuarioId }, _usuario).modelo;
+                if (cajas.Count == 0)
+                {
+                    AlertSuperior("Este usuario no tiene caja abierta, cree una caja por favor.", NotificationType.info);
+                    return RedirectToAction($"Index", "Caja");
+                }
+
                 (bool respuesta, string mensaje, _form.lista) = _service.ServiceCompra(Models.Sistema.OptionCompra.TODOS, new Models.Sistema.CompraModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
 
@@ -53,6 +64,9 @@ namespace Sistema.Controllers
         {
             try
             {
+                List<Models.Sistema.CajaModel> cajas = _service.ServiceCaja(Models.Sistema.OptionCaja.CAJA_ABIERTA, new Models.Sistema.CajaModel { UsuarioId = _UsuarioId }, _usuario).modelo;
+                if (cajas.Count == 0) throw new Exception("Este usuario aún no a abierto una caja, vaya a la caja a crear una por favor.");
+
                 Models.Sistema.CompraModel model = new Models.Sistema.CompraModel
                 {
                     Id = form.Id,
@@ -60,6 +74,7 @@ namespace Sistema.Controllers
                     ProductoId = form.ProductoId,
                     ProveedorId = form.ProveedorId,
                     PrecioCosto = form.PrecioCosto,
+                    CajaId = cajas[0].Id
                 };
 
                 (bool respuesta, string mensaje, _form.lista) = _service.ServiceCompra(Models.Sistema.OptionCompra.CREAR, model, _usuario);

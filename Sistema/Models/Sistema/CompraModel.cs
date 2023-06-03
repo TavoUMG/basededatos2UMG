@@ -17,6 +17,7 @@ namespace Sistema.Models.Sistema
         public int Cantidad { get; set; } = 0;
         public int ProductoId { get; set; } = 0;
         public int ProveedorId { get; set; } = 0;
+        public int CajaId { get; set; } = 0;
 
         [Required(ErrorMessage = "El Precio Costo es obligatoria")]
         public decimal PrecioCosto { get; set; }

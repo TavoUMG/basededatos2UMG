@@ -1,0 +1,68 @@
+﻿@model Sistema.Models.Formulario.PromocionForm
+
+<table id="DataTablePromocion" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="text-align: center; vertical-align: middle;">ID</th>
+            <th style="text-align: center; vertical-align: middle;">Nombre</th>
+            <th style="text-align: center; vertical-align: middle;">Producto</th>
+            <th style="text-align: center; vertical-align: middle;">Tipo Promoción</th>
+            <th style="text-align: center; vertical-align: middle;">Promoción</th>
+            <th style="text-align: center; vertical-align: middle;">Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.lista.Count; i++)
+        {
+            <tr>
+                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Id)</td>
+                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Producto.Nombre)</td>
+                <td style="text-align: center; vertical-align: middle;">
+                    <div class="attachment-block clearfix">
+                        <img class="attachment-img" width="125px" src="~/Productos/@Model.lista[i].Producto.Imagen" alt="@Model.lista[i].Producto.Nombre">
+                        <div class="attachment-pushed">
+                            <h4 class="attachment-heading">#@Html.DisplayFor(m => m.lista[i].Producto.Nombre)</h4>
+                        </div>
+                    </div>
+                </td>
+                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].TipoPromocion.Nombre)</td>
+                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Descripcion)</td>              
+                <td style="text-align: center; vertical-align: middle;">
+                    <table class="table table-bordered text-center">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a onclick="actualizar(
+                                        @Model.lista[i].Id,
+                                        @Model.lista[i].ProductoId,
+                                        @Model.lista[i].TipoPromocionId,
+                                        '@Model.lista[i].Descripcion'
+                                    )" class="btn btn-md btn-warning">ACTUALIZAR</a>
+                                </td>
+                                <td>
+                                    <a onclick="eliminar(@Model.lista[i].Id)" class="btn btn-md btn-info">ELIMINAR</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#DataTablePromocion').DataTable({
+          "paging": true,
+          "lengthChange": true,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": true,
+          "responsive": true,
+          lengthMenu: [10, @Model.lista.Count],
+          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#DataTablePromocion_wrapper .col-md-6:eq(0)');
+    });
+</script>

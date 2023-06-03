@@ -43,12 +43,11 @@ namespace Sistema.Util
             return saveToPath;
         }
 
-        public static bool generarPDF(string _hostEnvironment, Models.Sistema.FacturaModel factura, List<Models.Sistema.DetalleModel> detalle)
+        public static bool generarPDF(string _hostEnvironment, Models.Sistema.FacturaModel factura, List<Models.Sistema.DetalleModel> detalle, string host)
         {
             TicketPDF ticket = new TicketPDF();
             ticket.Path = Path.Combine(_hostEnvironment, "Tickets", factura.Archivo);
             ticket.HeaderImage = Path.Combine(_hostEnvironment, "images", "logo.png");
-            ticket.FooterQR = WebUtil.generarQR(_hostEnvironment, factura.Numero, "gracias por comprar");
 
             ticket.AddHeaderLine("NIT: 1002827029");
             ticket.AddHeaderLine($"FACTURA Nro.: {factura.Numero}");
@@ -58,8 +57,11 @@ namespace Sistema.Util
             ticket.AddSubHeaderLine($"NIT/CUI: {factura.CUI_NIT}");
             ticket.AddSubHeaderLine($"Cliente: {factura.Cliente.NombreCompleto}");
 
+            string ids = String.Empty;
             for (int i = 0; i < detalle.Count; i++)
             {
+                ids = i == 0 ? detalle[i].ProductoId.ToString() : $"{ids},{detalle[i].ProductoId}";
+
                 ticket.AddItem(
                     cantidad: detalle[i].Cantidad.ToString(),
                     item: detalle[i].Producto.Nombre,
@@ -78,7 +80,38 @@ namespace Sistema.Util
             ticket.AddFooterLine($"Código de Control: {ClassUtilidad.GUID()}");
             ticket.AddFooterLine($"Fecha Límite de Emisión: {factura.Fecha.AddMonths(2).Date.ToString("dd/MM/yyyy")}");
 
+            ClassSeguridad seguridad = new ClassSeguridad();
+            ticket.FooterQR = WebUtil.generarQR(_hostEnvironment, factura.Numero, $"{host}/Marcketing/{seguridad.EncryptData($"{factura.Id}-{factura.Numero}")}/Promociones/{seguridad.EncryptData(ids)}");
+
             return ticket.Print();
+        }
+
+        public static (bool respuesta, string mensaje) guardarImagen(string path, IFormFile file, bool validar = true)
+        {
+            (bool respuesta, string mensaje) = (false, "");
+
+            try
+            {
+                if(!Directory.Exists(path)) Directory.CreateDirectory(path);
+
+                if (validar && file == null) throw new Exception("La imagen es obligatoria");
+
+                mensaje = $"{ClassUtilidad.GUID()}{Path.GetExtension(file.FileName)}";
+
+                using (var fileStream = new FileStream(Path.Combine(path, mensaje), FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
+
+                respuesta = true;
+            }
+            catch (Exception ex)
+            {
+                respuesta = false;
+                mensaje = $"Error al guardar imagen: {ex.Message}";
+            }
+
+            return (respuesta, mensaje);
         }
 
         public static void SendEmail(string to, string name, string subject, string body, string password)

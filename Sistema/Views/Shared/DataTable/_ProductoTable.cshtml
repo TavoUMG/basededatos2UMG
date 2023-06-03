@@ -14,7 +14,14 @@
         @for (int i = 0; i < Model.lista.Count; i++)
         {
             <tr>
-                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Id)</td>
+                <td style="text-align: center; vertical-align: middle;">
+                    <div class="attachment-block clearfix">
+                        <img class="attachment-img" width="125px" src="~/Productos/@Model.lista[i].Imagen" alt="@Model.lista[i].Nombre">
+                        <div class="attachment-pushed">
+                            <h4 class="attachment-heading">#@Html.DisplayFor(m => m.lista[i].Id)</h4>
+                        </div>
+                    </div>
+                </td>
                 <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Categoria.Nombre)</td>
                 <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Nombre)</td>     
                 <td style="text-align: center; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].Vencimiento)</td>                
@@ -54,6 +61,6 @@
           "responsive": true,
           lengthMenu: [10, @Model.lista.Count],
           "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#DataTable_wrapper .col-md-6:eq(0)');
+        }).buttons().container().appendTo('#DataTableProducto_wrapper .col-md-6:eq(0)');
     });
 </script>

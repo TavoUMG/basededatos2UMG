@@ -14,6 +14,8 @@ CREATE PROCEDURE SP_TRANSACCION_FACTURA
 	@Total				DECIMAL(20,2),
 	@Detalle			NVARCHAR(MAX),
 	@Monto				DECIMAL(20,2),
+	@CajaId				INT = 0,
+	@TipoPago			NVARCHAR(25),
 	@Usuario			NVARCHAR(150)
 AS
 BEGIN
@@ -28,8 +30,8 @@ BEGIN
 				RAISERROR (1, -1, -1, @Mensaje);
 			END
 
-			INSERT INTO FACTURA ([ClienteId], [CUI_NIT], [Direccion], [Fecha], [Total], [AuditUsuarioCreacion]) 
-			VALUES (@ClienteId, @Cui_Nit, @Direccion, @Fecha, @Total, @Usuario);
+			INSERT INTO FACTURA ([ClienteId], [CUI_NIT], [Direccion], [Fecha], [Total], [CajaId], [TipoPago], [AuditUsuarioCreacion]) 
+			VALUES (@ClienteId	, @Cui_Nit, @Direccion, @Fecha, @Total, @CajaId, @TipoPago, @Usuario);
 
 			DECLARE @FacturaId INT = (SELECT IDENT_CURRENT('FACTURA'));
 

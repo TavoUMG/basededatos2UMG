@@ -25,18 +25,31 @@ namespace Sistema.Models.Formulario
         [Required(ErrorMessage = "El Total es obligatorio")]
         public decimal Total { get; set; }
 
+        [Required(ErrorMessage = "El Monto es obligatorio")]
+        public decimal Monto { get; set; }
+
+        [Required(ErrorMessage = "El Tipo de Pago es obligatorio")]
+        public string Pago { get; set; } = "";
+
         //Sección Form Detalle
         public int? ProductoId { get; set; } = 0;
         public int? Cantidad { get; set; } = 0;
         public bool Imprimir { get; internal set; } = false;
 
         public List<DatelleForm> Detalle { get; set; }
-
         public List<FacturaModel> lista { get; set; } = new List<FacturaModel>();
+
         public string Numero { get; internal set; }
         public string Archivo { get; internal set; }
+        public int CajaId { get; internal set; }
 
+        public List<Select> pagos = new List<Select>();
         public List<ClienteModel> clientes = new List<ClienteModel>();
         public List<InventarioModel> productos = new List<InventarioModel>();
+    }
+
+    public class Select
+    {
+        public string value { get; internal set; }
     }
 }

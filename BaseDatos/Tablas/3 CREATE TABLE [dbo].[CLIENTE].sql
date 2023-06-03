@@ -5,7 +5,7 @@ BEGIN
 		[Nombre] [nvarchar] (50) NOT NULL,
 		[Apellido] [nvarchar](50) NOT NULL,			
 		[Telefono] [nvarchar](20) NULL,
-		[Direccion] [nvarchar](150) NULL,			
+		[Direccion] [nvarchar](250) NULL
 	 CONSTRAINT [PK_CLIENTE] PRIMARY KEY CLUSTERED	
 	(
 		[Id] DESC
