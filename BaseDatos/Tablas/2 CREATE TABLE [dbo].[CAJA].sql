@@ -14,6 +14,8 @@ BEGIN
 	ALTER TABLE [dbo].[CAJA]  WITH CHECK ADD  CONSTRAINT [FK_CAJA_UsuarioId] FOREIGN KEY([UsuarioId])
 	REFERENCES [dbo].[USUARIO] ([Id])
 
+	INSERT INTO Caja(UsuarioId, efectivoApertura, efectivoCierre) VALUES(1, 10000, 0);
+
 	PRINT N'CREATE TABLE [dbo].[CAJA]'
 END
 ELSE
