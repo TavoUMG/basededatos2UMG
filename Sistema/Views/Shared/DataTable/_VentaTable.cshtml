@@ -6,6 +6,8 @@
             <th style="text-align: center; vertical-align: middle;">ID</th>
             <th style="text-align: center; vertical-align: middle;">Cliente</th>
             <th style="text-align: center; vertical-align: middle;">Factura</th>
+            <th style="text-align: center; vertical-align: middle;">Tipo Pago</th>
+            <th style="text-align: center; vertical-align: middle;">Pagado</th>
             <th style="text-align: center; vertical-align: middle;">Detalle</th>
             <th style="text-align: center; vertical-align: middle;">Total Q</th>
         </tr>
@@ -28,6 +30,12 @@
                         <dd>@Html.DisplayFor(m => m.lista[i].Direccion)</dd>
                     </dl>
                 </td>     
+                <td style="text-align: center; vertical-align: middle;">@Html.DisplayFor(m => m.lista[i].TipoPago)</td>  
+                @if(Model.lista[i].Pagado) {
+                    <td style="text-align: center; vertical-align: middle;">SI</td>     
+                } else {
+                    <td style="text-align: center; vertical-align: middle;">NO</td>     
+                }
                 <td style="text-align: center; vertical-align: middle;">
                     <div id="accordion_@Model.lista[i].Id">
                         <div class="card card-success">
@@ -84,6 +92,6 @@
           "responsive": true,
           lengthMenu: [10, @Model.lista.Count],
           "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#DataTable_wrapper .col-md-6:eq(0)');
+        }).buttons().container().appendTo('#DataTableFactura_wrapper .col-md-6:eq(0)');
     });
 </script>

@@ -7,8 +7,18 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE PROCEDURE SP_MATENIMIENTO_TIPO_PROMOCION
+	@Opcion				INT,
+	@Id					INT = 0
 AS
 BEGIN
-	SELECT * FROM TIPO_PROMOCION;
+	IF (@Opcion = 1) --Opci�n para devolver el listado completo
+	BEGIN
+		SELECT * FROM TIPO_PROMOCION;
+	END
+		
+	IF (@Opcion = 2) --Opci�n para seleccionar por ID
+	BEGIN
+		SELECT * FROM TIPO_PROMOCION WHERE [Id] = @Id;
+	END
 END
 GO

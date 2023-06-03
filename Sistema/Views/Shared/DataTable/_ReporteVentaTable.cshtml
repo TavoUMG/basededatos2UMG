@@ -1,0 +1,41 @@
+﻿@model Sistema.Models.Formulario.ReporteForm
+
+<table id="DataTableReporteVenta" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="text-align: center; vertical-align: middle;">Caja</th>
+            <th style="text-align: center; vertical-align: middle;">Producto</th>
+            <th style="text-align: center; vertical-align: middle;">Apertura Q</th>
+            <th style="text-align: center; vertical-align: middle;">Cierre Q</th>
+            <th style="text-align: center; vertical-align: middle;">Venta Q</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Ventas.Count; i++)
+        {
+            <tr>
+                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.Ventas[i].Caja)</td>
+                <td style="text-align: left; vertical-align: middle;">@Html.DisplayFor(m => m.Ventas[i].Producto)</td>    
+                <td style="text-align: right; vertical-align: middle;">@Html.DisplayFor(m => m.Ventas[i].Apertura)</td>    
+                <td style="text-align: right; vertical-align: middle;">@Html.DisplayFor(m => m.Ventas[i].Cierre)</td>   
+                <td style="text-align: right; vertical-align: middle;">@Html.DisplayFor(m => m.Ventas[i].Venta)</td>                 
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#DataTableReporteVenta').DataTable({
+          "paging": true,
+          "lengthChange": true,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": true,
+          "responsive": true,
+          lengthMenu: [10, @Model.Ventas.Count],
+          "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#DataTableReporteVenta_wrapper .col-md-6:eq(0)');
+    });
+</script>

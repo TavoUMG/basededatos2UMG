@@ -1,0 +1,206 @@
+﻿@model Sistema.Models.Formulario.MarcketingForm
+
+@{
+    ViewData["Title"] = "MARCKETING";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@Environment.GetEnvironmentVariable("APP_NAME") | @ViewData["Title"]</title>
+    <!-- SwwetAlert -->
+    <link rel="stylesheet" href="~/plugins/sweetalert2/sweetalert2.min.css">
+    <link rel="stylesheet" href="~/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    <script type="text/javascript" src="~/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+</head>
+<body class="layout-top-nav layout-footer-fixed" style="background-image: linear-gradient(45deg, #1ebdc3 2%, white 98%);">
+    @Html.Partial("_NotificationPanel")
+
+
+    <div class="loader_oficial"></div>
+    <div class="wrapper">    
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="background-image: linear-gradient(45deg, #1ebdc3 2%, white 98%);">
+            <div class="content-header">
+                <div class="container">
+                    <div class="row mb-12">
+                        <div class="col-sm-12" style="text-align:center">
+                             <img src="~/images/LogoFinal.png" alt="" style="width: 350px !important;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <section class="content">
+                    <div class="card card-solid">
+
+                        <div class="card-body pb-0">
+                            
+                            <div class="row">
+                                @for (var i = 0; i < Model.descuentos.Count; i++)
+                                {
+                                    <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+                                        <div class="card bg-light d-flex flex-fill">
+                                            <div class="card-header text-muted border-bottom-0">
+                                                @Model.descuentos[i].TipoPromocion.Nombre
+                                            </div>
+                                            <div class="card-body pt-0">
+                                                <div class="row">
+                                                    <div class="col-7">
+                                                        <h2 class="lead"><b>@Model.descuentos[i].Producto.Nombre</b></h2>
+                                                        <p class="text-muted text-sm">
+                                                            <b>Promoción: </b> 
+                                                            @Model.descuentos[i].Descripcion
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-5 text-center">
+                                                        <img src="~/Productos/@Model.descuentos[i].Producto.Imagen" alt="@Model.descuentos[i].Producto.Id" class="img-circle img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <p><i class="fa fa-clock"></i> @Model.descuentos[i].Auditoria.AuditFechaCreacion</p>
+                                            </div>
+                                        </div>
+                                    </div>                                
+                                }
+                            </div>
+                            
+                            <div class="row">
+                                @for (var i = 0; i < Model.gratuitos.Count; i++)
+                                {
+                                    <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+                                        <div class="card bg-light d-flex flex-fill">
+                                            <div class="card-header text-muted border-bottom-0">
+                                                @Model.gratuitos[i].TipoPromocion.Nombre
+                                            </div>
+                                            <div class="card-body pt-0">
+                                                <div class="row">
+                                                    <div class="col-7">
+                                                        <h2 class="lead"><b>@Model.gratuitos[i].Producto.Nombre</b></h2>
+                                                        <p class="text-muted text-sm">
+                                                            <b>Promoción: </b> 
+                                                            @Model.gratuitos[i].Descripcion
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-5 text-center">
+                                                        <img src="~/Productos/@Model.gratuitos[i].Producto.Imagen" alt="@Model.gratuitos[i].Producto.Id" class="img-circle img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <p><i class="fa fa-clock"></i> @Model.gratuitos[i].Auditoria.AuditFechaCreacion</p>
+                                            </div>
+                                        </div>
+                                    </div>                                
+                                }
+                            </div>
+                            
+                            <div class="row">
+                                @for (var i = 0; i < Model.mitad_precios.Count; i++)
+                                {
+                                    <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+                                        <div class="card bg-light d-flex flex-fill">
+                                            <div class="card-header text-muted border-bottom-0">
+                                                @Model.mitad_precios[i].TipoPromocion.Nombre
+                                            </div>
+                                            <div class="card-body pt-0">
+                                                <div class="row">
+                                                    <div class="col-7">
+                                                        <h2 class="lead"><b>@Model.mitad_precios[i].Producto.Nombre</b></h2>
+                                                        <p class="text-muted text-sm">
+                                                            <b>Promoción: </b> 
+                                                            @Model.mitad_precios[i].Descripcion
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-5 text-center">
+                                                        <img src="~/Productos/@Model.mitad_precios[i].Producto.Imagen" alt="@Model.mitad_precios[i].Producto.Id" class="img-circle img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <p><i class="fa fa-clock"></i> @Model.mitad_precios[i].Auditoria.AuditFechaCreacion</p>
+                                            </div>
+                                        </div>
+                                    </div>                                
+                                }
+                            </div>
+                            
+                            <div class="row">
+                                @for (var i = 0; i < Model.compras_mayores.Count; i++)
+                                {
+                                    <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+                                        <div class="card bg-light d-flex flex-fill">
+                                            <div class="card-header text-muted border-bottom-0">
+                                                @Model.compras_mayores[i].TipoPromocion.Nombre
+                                            </div>
+                                            <div class="card-body pt-0">
+                                                <div class="row">
+                                                    <div class="col-7">
+                                                        <h2 class="lead"><b>@Model.compras_mayores[i].Producto.Nombre</b></h2>
+                                                        <p class="text-muted text-sm">
+                                                            <b>Promoción: </b> 
+                                                            @Model.compras_mayores[i].Descripcion
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-5 text-center">
+                                                        <img src="~/Productos/@Model.compras_mayores[i].Producto.Imagen" alt="@Model.compras_mayores[i].Producto.Id" class="img-circle img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <p><i class="fa fa-clock"></i> @Model.compras_mayores[i].Auditoria.AuditFechaCreacion</p>
+                                            </div>
+                                        </div>
+                                    </div>                                
+                                }
+                            </div>
+                            
+                            <div class="row">
+                                @for (var i = 0; i < Model.puntos_productos.Count; i++)
+                                {
+                                    <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
+                                        <div class="card bg-light d-flex flex-fill">
+                                            <div class="card-header text-muted border-bottom-0">
+                                                @Model.puntos_productos[i].TipoPromocion.Nombre
+                                            </div>
+                                            <div class="card-body pt-0">
+                                                <div class="row">
+                                                    <div class="col-7">
+                                                        <h2 class="lead"><b>@Model.puntos_productos[i].Producto.Nombre</b></h2>
+                                                        <p class="text-muted text-sm">
+                                                            <b>Promoción: </b> 
+                                                            @Model.puntos_productos[i].Descripcion
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-5 text-center">
+                                                        <img src="~/Productos/@Model.puntos_productos[i].Producto.Imagen" alt="@Model.puntos_productos[i].Producto.Id" class="img-circle img-fluid">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <p><i class="fa fa-clock"></i> @Model.puntos_productos[i].Auditoria.AuditFechaCreacion</p>
+                                            </div>
+                                        </div>
+                                    </div>                                
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+        </div>
+      <!-- /.content-wrapper -->
+      @await Component.InvokeAsync("Footer")
+    </div>
+    <!-- ./wrapper -->
+</body>
+</html>

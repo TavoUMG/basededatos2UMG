@@ -53,6 +53,15 @@
             </div>
         </div>
     }
+    <div class="col-12 col-sm-12 col-md-4">
+        <div class="form-group">
+            <label asp-for="Pago"><span class="text-danger">*</span>Tipo de Pago</label>
+            <select asp-for="Pago" class="form-control select2" data-val="false" asp-items="@(new SelectList(Model.pagos,"value","value",Model.Pago))">
+                <option value="">Seleccion uno por favor</option>
+            </select>
+            @Html.ValidationMessageFor(Model => Model.Pago)
+        </div>
+    </div>
     <div class="col-12 col-sm-12 col-md-3">
         <div class="form-group">
             <label asp-for="Fecha"><span class="text-danger">*</span>Fecha y Hora</label>
@@ -80,14 +89,21 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-12 col-sm-12 col-md-8">
+    <div class="col-12 col-sm-12 col-md-6">
         <div class="form-group">
             <label asp-for="Direccion">Dirección</label>
             <textarea asp-for="Direccion" type="text" class="form-control form-control-sm" rows="2" ></textarea>
             @Html.ValidationMessageFor(Model => Model.Direccion)
         </div>
     </div>
-    <div class="col-12 col-sm-12 col-md-4 text-right">
+    <div class="col-12 col-sm-12 col-md-3">
+        <div class="form-group">
+            <label asp-for="Monto"><span class="text-danger">*</span>Pago</label>
+            <input asp-for="Monto" type="text" class="form-control form-control-sm" onkeypress="ValidaSoloNumerosPunto(event)"/>
+            @Html.ValidationMessageFor(Model => Model.Monto)
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-3 text-right">
         <p><h2>Total Q</h2> <h1><strong id="h4Total">@Model.Total</strong></h1></p>
     </div>
 </div>
@@ -281,6 +297,15 @@
 
         let validacionActiva = $('#form').valid();
         let timerInterval
+
+        var Total = $("#h4Total").html();
+        var Monto = $("#Monto").val();
+        
+        if (Monto > (Total + 1)) {
+            Swal.fire({icon:'info', title: '¡Pago!', text: `El monto total a pagar es Q ${Total} y no puede dar más del monto total` });
+            return;
+        }
+
         if(validacionActiva && GetCount("DataTableDetalle") > 0)
         {
             Swal.fire({
@@ -310,7 +335,6 @@
         }
         else
         {
-            console.log('¡Validación!')
             Swal.fire({
                 title: '¡Validación!',
                 icon: 'error',

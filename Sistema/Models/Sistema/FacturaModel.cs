@@ -28,6 +28,12 @@ namespace Sistema.Models.Sistema
 
         [Required(ErrorMessage = "El Total es obligatorio")]
         public decimal Total { get; set; }
+
+        public int CajaId { get; set; } = 0;
+        public string TipoPago { get; set; } = "";
+        public bool Pagado { get; set; } = false;
+
+
         public string Numero { get; internal set; }
         public string Archivo { get; internal set; }
 

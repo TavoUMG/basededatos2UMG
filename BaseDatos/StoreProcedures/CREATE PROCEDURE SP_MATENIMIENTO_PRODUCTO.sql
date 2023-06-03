@@ -32,9 +32,18 @@ BEGIN
 		
 		IF (@Opcion = 3) --Opci�n para actualizar
 		BEGIN
-			UPDATE PRODUCTO SET [CategoriaId]=@CategoriaId, [Nombre] = @Nombre, [Vencimiento]=@Vencimiento,
-			 [Imagen] = @Imagen, [AuditUsuarioModificacion] = @Usuario
-			WHERE [Id] = @Id;
+			IF @Imagen IS NOT NULL AND @Imagen <> ''
+			BEGIN
+				UPDATE PRODUCTO SET [CategoriaId]=@CategoriaId, [Nombre] = @Nombre, [Vencimiento]=@Vencimiento,
+				 [Imagen] = @Imagen, [AuditUsuarioModificacion] = @Usuario
+				WHERE [Id] = @Id;
+			END
+			ELSE
+			BEGIN
+				UPDATE PRODUCTO SET [CategoriaId]=@CategoriaId, [Nombre] = @Nombre, [Vencimiento]=@Vencimiento,
+					[AuditUsuarioModificacion] = @Usuario
+				WHERE [Id] = @Id;
+			END
 		END
 		
 		IF (@Opcion = 4) --Opci�n para eliminar

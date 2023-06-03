@@ -20,12 +20,13 @@ namespace Sistema.Controllers
         private ServiceSQLServer _service;
         private ClassSeguridad _seguridad;
 
-        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment hostingEnvironment)
+        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _hostingEnvironment = hostingEnvironment;
             _service = new ServiceSQLServer();
             _seguridad = new ClassSeguridad();
+            Environment.SetEnvironmentVariable("RecoverPasswordURL", httpContextAccessor.HttpContext.Request.Scheme + "://" + httpContextAccessor.HttpContext.Request.Host.Value + "/Home/CambiarPassword/{0}/{1}");
         }
 
         #region Index

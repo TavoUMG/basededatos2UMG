@@ -1,0 +1,319 @@
+﻿@model Sistema.Models.Formulario.PromocionForm
+
+@{
+    ViewData["Title"] = "ADMINISTRAR PROMOCIONES";
+    Layout = "_Layout";
+    string formId = "FormPromocion";
+    string buttonId = "btnPromocion";
+    string divTableId = "divDataTablePromocion";
+    string partialViewName = "DataTable/_PromocionTable";
+}
+
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">@ViewData["Title"]</h1>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- Main row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">@ViewData["Title"]</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+<div class="col-md-4">
+    <form id="@formId" method="POST" autocomplete="off">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class="form-group">
+                    <label asp-for="TipoPromocionId"><span class="text-danger">*</span> Tipo de Promoción</label>
+                    <select asp-for="TipoPromocionId" class="form-control select2" data-val="false" asp-items="@(new SelectList(Model.promociones,"Id","Nombre",Model.TipoPromocionId))">
+                        <option value="0">Seleccion uno por favor</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-8">
+                <div class="form-group">
+                    <label asp-for="ProductoId"><span class="text-danger">*</span> Producto</label>
+                    <select asp-for="ProductoId" class="form-control select2" data-val="false" asp-items="@(new SelectList(Model.productos,"Id","Nombre",Model.ProductoId))">
+                        <option value="0">Seleccion uno por favor</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <label asp-for="Descripcion"><span class="text-danger">*</span> Descripción</label>
+                    <textarea asp-for="Descripcion" type="text" class="form-control form-control-sm" rows="2" ></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <br /><br />
+                <a onclick="limpiar()" class="btn btn-md btn-info">Limpiar</a>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <br /><br />
+                <button id="@buttonId" type="submit" class="btn btn-block btn-primary">Guardar</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="col-md-8 mb-3" id="@divTableId">
+@await Html.PartialAsync(partialViewName: partialViewName, model: Model)
+</div>
+                        </div>
+                    </div>   
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div><!--/. container-fluid -->
+</section>
+<!-- /.content -->
+
+<script type="text/javascript">
+    var _form = "#"+'@formId';
+    var _btn  = "#"+'@buttonId';
+    var _div  = "#"+'@divTableId';
+    var _title = "¡Guardar!";
+
+    $(document).ready(function () {
+        $('.select2').select2();
+
+        $(_form).validate({
+            rules: {
+                "ProductoId": { 
+                    required: true, 
+                    number: true, 
+                    min: 1
+                },
+                "TipoPromocionId": { 
+                    required: true, 
+                    number: true, 
+                    min: 1
+                },
+                "Descripcion": { required: true },
+            },
+            messages: {
+                "ProductoId": {
+                    required: "El producto es obligatorio",
+                    number: "El producto solo acepta números",
+                    min: "El producto debe ser mayor a 0"
+                },
+                "TipoPromocionId": {
+                    required: "El tipo de promoción es obligatorio",
+                    number: "El tipo de promoción solo acepta números",
+                    min: "El tipo de promoción debe ser mayor a 0"
+                },
+                "Descripcion": {
+                    required: "La descripción es obligatoria"
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            },
+            invalidHandler: function (event, validator) {
+                var errors = validator.numberOfInvalids();
+
+                if (errors) {
+                    var message = errors == 1
+                        ? `Al paracer el sistema detecto que ${errors} campo no cumple con la validación.`
+                        : `Al paracer el sistema detecto que ${errors} campos no cumplen con la validación.`;
+
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            }
+
+        });        
+    });
+
+    $(_btn).click(function (event) {
+       if($(_form).valid())
+        {
+            event.preventDefault();
+            Swal.fire({
+                title: _title,
+                text: "¿Esta seguro de realizar esta acción?",
+                icon: "success",
+                allowOutsideClick: () => {
+                    const popup = Swal.getPopup()
+                    popup.classList.remove('swal2-show')
+                    setTimeout(() => {
+                        popup.classList.add('animate__animated', 'animate__headShake')
+                    })
+                    setTimeout(() => {
+                        popup.classList.remove('animate__animated', 'animate__headShake')
+                    }, 500)
+                    return false
+                },  
+                showCancelButton: true,
+                confirmButtonColor: '#09cd27',
+                cancelButtonColor: '#e91d10',
+                confirmButtonText: 'SI',
+                cancelButtonText: `NO`,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: $("#Id").val() == 0 ? '@Url.Action("Insertar", "Promocion")' : '@Url.Action("Actualizar", "Promocion")',
+                        headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                        method:'POST',
+                        data: $(_form).serialize(),
+                        success: function (data) {
+                            $(_div).empty();
+                            $(_div).html(data);
+
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: $("#Id").val() == 0 ? "El registro fue creado." : "El registro fue modificado.",
+                                showConfirmButton: false,
+                                timer: 2500
+                            })
+
+                            $(_form).get(0).reset()
+                            limpiar()
+                        },
+                        error: function(e) {
+                            errorDialog(e)
+                        },
+                        complete: function() {
+                        }
+                    });
+                }
+            })
+        }
+    });
+
+    function eliminar(id) {
+        Swal.fire({
+            title: "Eliminar",
+            text: "¿Esta seguro de realizar esta acción?",
+            icon: "success",
+            allowOutsideClick: () => {
+                const popup = Swal.getPopup()
+                popup.classList.remove('swal2-show')
+                setTimeout(() => {
+                    popup.classList.add('animate__animated', 'animate__headShake')
+                })
+                setTimeout(() => {
+                    popup.classList.remove('animate__animated', 'animate__headShake')
+                }, 500)
+                return false
+            },  
+            showCancelButton: true,
+            confirmButtonColor: '#09cd27',
+            cancelButtonColor: '#e91d10',
+            confirmButtonText: 'SI',
+            cancelButtonText: `NO`,
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("Eliminar", "Promocion")',
+                    method:'POST',
+                    headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                    data: {
+                        Id: id
+                    },
+                    success: function (data) {
+                        $(_div).empty();
+                        $(_div).html(data);
+
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: "El registro fue eliminado",
+                            showConfirmButton: false,
+                            timer: 2500
+                        })
+                    },
+                    error: function(e) {
+                        errorDialog(e)
+                    },
+                    complete: function() {
+                    }
+                });
+            }
+        })
+    }
+
+    function actualizar(id, productoId, tipoPromocionId, descripcion) {
+        limpiar();
+
+        $("#Id").val(id)
+        $("#ProductoId").val(productoId).change();
+        $("#TipoPromocionId").val(tipoPromocionId).change();
+        $("#Descripcion").val(descripcion)
+    }
+
+    function limpiar() {
+        $("#Id").val(0)
+        $("#ProductoId").val(0).change();
+        $("#TipoPromocionId").val(0).change();
+        $("#Descripcion").val("")
+    }
+    
+	function errorDialog(e) {
+        if(e.status == 400) {
+            Swal.fire({
+                title: '¡Error!',
+                icon: 'error',
+                html:
+                `<span>${e.responseJSON.error}</span> <br/><br/> La ventana se cerrara en <strong></strong> segundos.<br/><br/>`,
+                timer: 10000,
+                didOpen: () => {
+                    const content = Swal.getHtmlContainer()
+                    const $ = content.querySelector.bind(content)
+
+                    Swal.showLoading()
+
+                    timerInterval = setInterval(() => {
+                            Swal.getHtmlContainer().querySelector('strong')
+                            .textContent = (Swal.getTimerLeft() / 1000)
+                                .toFixed(0)
+                        }, 100)
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            })
+        } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Ocurrio un error en el servidor'
+            })
+        }
+	}
+</script>

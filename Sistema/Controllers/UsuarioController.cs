@@ -4,10 +4,12 @@ using Sistema.Models.Formulario;
 using Sistema.Services;
 using static Sistema.Models.View.ModelSweetAlert;
 using Sistema.Util;
+using Sistema.Filters;
 
 namespace Sistema.Controllers
 {
     [Route("[controller]")]
+    [RequestAuthenticationFilter]
     public class UsuarioController : NotificadorController
     {
         private readonly ILogger<UsuarioController> _logger;

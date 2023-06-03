@@ -34,7 +34,7 @@ BEGIN
 		IF (@Opcion = 3) --Opci�n para actualizar
 		BEGIN
 			UPDATE COMPRA SET [Cantidad]=@Cantidad, [ProductoId]=@ProductoId, [ProveedorId]=@ProveedorId, 
-			[PrecioCosto]=@PrecioCosto, [CajaId] = @CajaId, [AuditUsuarioCreacion]=@Usuario
+			[PrecioCosto]=@PrecioCosto, [AuditUsuarioCreacion]=@Usuario
 			WHERE [Id] = @Id;
 		END
 		

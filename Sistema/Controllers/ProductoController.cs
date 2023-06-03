@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Sistema.Filters;
 using Sistema.Models.Formulario;
 using Sistema.Services;
 using Sistema.Util;
@@ -7,18 +8,21 @@ using static Sistema.Models.View.ModelSweetAlert;
 namespace Sistema.Controllers
 {
     [Route("[controller]")]
+    [RequestAuthenticationFilter]
     public class ProductoController : NotificadorController
     {
         private readonly ILogger<ProductoController> _logger;
+        private readonly IWebHostEnvironment _hostEnvironment;
         protected const string _controller = "ProductoController";
         protected const string _dataTable = "DataTable/_ProductoTable";
         private ServiceSQLServer _service;
         private String _usuario;
         private ProductoForm _form;
 
-        public ProductoController(ILogger<ProductoController> logger, IHttpContextAccessor httpContextAccessor)
+        public ProductoController(ILogger<ProductoController> logger, IWebHostEnvironment hostEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
+            _hostEnvironment = hostEnvironment;
             _service = new ServiceSQLServer();
             _usuario = WebUtil.GetServiceValues(httpContextAccessor.HttpContext.Session).NombreCompleto;
             _form = new ProductoForm();
@@ -52,15 +56,19 @@ namespace Sistema.Controllers
         {
             try
             {
+                (bool respuesta, string mensaje) = WebUtil.guardarImagen(Path.Combine(_hostEnvironment.WebRootPath, "Productos"), form.Imagen);
+                if (!respuesta) throw new Exception(mensaje);
+
                 Models.Sistema.ProductoModel model = new Models.Sistema.ProductoModel 
                 { 
                     Id = form.Id,
                     CategoriaId = form.CategoriaId,
                     Nombre = form.Nombre,
                     Vencimiento = form.Vencimiento,
+                    Imagen = mensaje
                 };
 
-                (bool respuesta, string mensaje, _form.lista) = _service.ServiceProducto(Models.Sistema.OptionProducto.CREAR, model, _usuario);
+                (respuesta, mensaje, _form.lista) = _service.ServiceProducto(Models.Sistema.OptionProducto.CREAR, model, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
                 (respuesta, mensaje, _form.lista) = _service.ServiceProducto(Models.Sistema.OptionProducto.TODOS, new Models.Sistema.ProductoModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
@@ -81,15 +89,19 @@ namespace Sistema.Controllers
         {
             try
             {
+                (bool respuesta, string mensaje) = WebUtil.guardarImagen(Path.Combine(_hostEnvironment.WebRootPath, "Productos"), form.Imagen, form.Imagen != null);
+                if(!respuesta) throw new Exception(mensaje);
+
                 Models.Sistema.ProductoModel model = new Models.Sistema.ProductoModel
                 {
                     Id = form.Id,
                     CategoriaId = form.CategoriaId,
                     Nombre = form.Nombre,
                     Vencimiento = form.Vencimiento,
+                    Imagen = mensaje
                 };
 
-                (bool respuesta, string mensaje, _form.lista) = _service.ServiceProducto(Models.Sistema.OptionProducto.EDITAR, model, _usuario);
+                (respuesta, mensaje, _form.lista) = _service.ServiceProducto(Models.Sistema.OptionProducto.EDITAR, model, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
                 (respuesta, mensaje, _form.lista) = _service.ServiceProducto(Models.Sistema.OptionProducto.TODOS, new Models.Sistema.ProductoModel { }, _usuario);
                 if (!respuesta) throw new Exception(mensaje);
